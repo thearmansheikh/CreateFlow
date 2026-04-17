@@ -1,0 +1,17 @@
+.env
+.env.local
+.env.*.local
+.next/
+out/
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts
+.vscode/
+.idea/
+
+# Decisions (optional — remove if you want to commit)
+# Decisions/
