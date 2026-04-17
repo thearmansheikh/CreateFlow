@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import {
   Image as ImageIcon,
   Sparkles,
@@ -27,14 +27,14 @@ const aspectRatios = [
 ]
 
 const stylePresets = [
-  { label: "Photorealistic", value: "photorealistic", desc: "Lifelike photography style" },
-  { label: "Digital Art", value: "digital-art", desc: "Stylized digital illustration" },
-  { label: "Anime", value: "anime", desc: "Japanese animation style" },
-  { label: "Oil Painting", value: "oil-painting", desc: "Classic oil painting texture" },
-  { label: "Watercolor", value: "watercolor", desc: "Soft watercolor wash effect" },
-  { label: "3D Render", value: "3d-render", desc: "CGI 3D rendered look" },
-  { label: "Minimalist", value: "minimalist", desc: "Clean, simple composition" },
-  { label: "Cinematic", value: "cinematic", desc: "Movie still with dramatic lighting" },
+  { label: "Photorealistic", value: "photorealistic", desc: "Lifelike photography" },
+  { label: "Digital Art", value: "digital-art", desc: "Stylized illustration" },
+  { label: "Anime", value: "anime", desc: "Japanese animation" },
+  { label: "Oil Painting", value: "oil-painting", desc: "Classical oil texture" },
+  { label: "Watercolor", value: "watercolor", desc: "Soft watercolor wash" },
+  { label: "3D Render", value: "3d-render", desc: "CGI 3D look" },
+  { label: "Minimalist", value: "minimalist", desc: "Clean, simple" },
+  { label: "Cinematic", value: "cinematic", desc: "Dramatic lighting" },
 ]
 
 export default function ImageGeneratorPage() {
@@ -45,14 +45,39 @@ export default function ImageGeneratorPage() {
   const [numImages, setNumImages] = useState(1)
   const [isGenerating, setIsGenerating] = useState(false)
   const [generatedImages, setGeneratedImages] = useState<string[]>([])
+  const [error, setError] = useState<string | null>(null)
 
   const handleGenerate = async () => {
     if (!prompt.trim()) return
     setIsGenerating(true)
-    // Simulated — will connect to Replicate/FAL.ai API in Phase 3
-    await new Promise((r) => setTimeout(r, 3000))
-    setGeneratedImages(["placeholder-1", "placeholder-2"])
-    setIsGenerating(false)
+    setError(null)
+
+    try {
+      const res = await fetch("/api/generate/image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          prompt: prompt.trim(),
+          negativePrompt,
+          aspectRatio,
+          style,
+          numOutputs: numImages,
+        }),
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        setError(data.error || "Generation failed")
+        return
+      }
+
+      setGeneratedImages(data.images || [])
+    } catch (err) {
+      setError("Network error. Please try again.")
+    } finally {
+      setIsGenerating(false)
+    }
   }
 
   return (
@@ -183,15 +208,20 @@ export default function ImageGeneratorPage() {
 
         {/* Right Panel — Results */}
         <div className="flex-1 p-6">
+          {error && (
+            <div className="mb-6 rounded-lg border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+              {error}
+            </div>
+          )}
+
           {generatedImages.length === 0 && !isGenerating ? (
             <div className="flex h-full flex-col items-center justify-center text-center">
-              <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20">
+              <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-2xl bg-primary/10">
                 <ImageIcon className="h-10 w-10 text-primary/60" />
               </div>
               <h3 className="text-lg font-medium">Your creations will appear here</h3>
               <p className="mt-1 max-w-sm text-sm text-muted-foreground">
                 Enter a prompt and click Generate to create AI images.
-                Try being specific about style, lighting, and composition.
               </p>
               <div className="mt-6 flex flex-wrap justify-center gap-2">
                 {[
@@ -217,29 +247,29 @@ export default function ImageGeneratorPage() {
               <p className="mt-1 text-xs text-muted-foreground">This usually takes 10-30 seconds</p>
             </div>
           ) : (
-            <div className="space-y-4">
-              <div className="grid gap-4 sm:grid-cols-2">
-                {generatedImages.map((img, i) => (
-                  <Card key={i} className="overflow-hidden">
-                    <div className="flex aspect-square items-center justify-center bg-gradient-to-br from-slate-800 to-slate-900">
-                      <ImageIcon className="h-16 w-16 text-muted-foreground/30" />
-                    </div>
-                    <div className="flex items-center justify-between p-3">
-                      <span className="text-xs text-muted-foreground">
-                        {aspectRatio} · {style || "Default"}
-                      </span>
-                      <div className="flex gap-1">
-                        <Button variant="ghost" size="icon" className="h-7 w-7">
+            <div className="grid gap-4 sm:grid-cols-2">
+              {generatedImages.map((url, i) => (
+                <Card key={i} className="overflow-hidden">
+                  <div className="relative aspect-square bg-secondary">
+                    <img src={url} alt={`Generated ${i + 1}`} className="h-full w-full object-cover" />
+                  </div>
+                  <div className="flex items-center justify-between p-3">
+                    <span className="text-xs text-muted-foreground">
+                      {aspectRatio} · {style || "Default"}
+                    </span>
+                    <div className="flex gap-1">
+                      <Button variant="ghost" size="icon" className="h-7 w-7" asChild>
+                        <a href={url} download>
                           <Download className="h-3.5 w-3.5" />
-                        </Button>
-                        <Button variant="ghost" size="icon" className="h-7 w-7">
-                          <Share2 className="h-3.5 w-3.5" />
-                        </Button>
-                      </div>
+                        </a>
+                      </Button>
+                      <Button variant="ghost" size="icon" className="h-7 w-7">
+                        <Share2 className="h-3.5 w-3.5" />
+                      </Button>
                     </div>
-                  </Card>
-                ))}
-              </div>
+                  </div>
+                </Card>
+              ))}
             </div>
           )}
         </div>
