@@ -99,77 +99,6 @@ export interface Database {
           created_at?: string
         }
       }
-      content_items: {
-        Row: {
-          id: string
-          workspace_id: string
-          user_id: string | null
-          type: 'image' | 'video' | 'music' | 'copy' | 'upload'
-          title: string | null
-          description: string | null
-          file_url: string | null
-          thumbnail_url: string | null
-          file_size: number | null
-          mime_type: string | null
-          width: number | null
-          height: number | null
-          duration: number | null
-          tags: string[]
-          folder_id: string | null
-          brand_profile_id: string | null
-          is_favorite: boolean
-          ai_model_used: string | null
-          original_prompt: string | null
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          workspace_id: string
-          user_id?: string | null
-          type: 'image' | 'video' | 'music' | 'copy' | 'upload'
-          title?: string | null
-          description?: string | null
-          file_url?: string | null
-          thumbnail_url?: string | null
-          file_size?: number | null
-          mime_type?: string | null
-          width?: number | null
-          height?: number | null
-          duration?: number | null
-          tags?: string[]
-          folder_id?: string | null
-          brand_profile_id?: string | null
-          is_favorite?: boolean
-          ai_model_used?: string | null
-          original_prompt?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          workspace_id?: string
-          user_id?: string | null
-          type?: 'image' | 'video' | 'music' | 'copy' | 'upload'
-          title?: string | null
-          description?: string | null
-          file_url?: string | null
-          thumbnail_url?: string | null
-          file_size?: number | null
-          mime_type?: string | null
-          width?: number | null
-          height?: number | null
-          duration?: number | null
-          tags?: string[]
-          folder_id?: string | null
-          brand_profile_id?: string | null
-          is_favorite?: boolean
-          ai_model_used?: string | null
-          original_prompt?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-      }
       folders: {
         Row: {
           id: string
@@ -242,6 +171,77 @@ export interface Database {
           brand_fonts?: string[] | null
           brand_examples?: string[] | null
           is_default?: boolean
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      content_items: {
+        Row: {
+          id: string
+          workspace_id: string
+          user_id: string | null
+          type: 'image' | 'video' | 'music' | 'copy' | 'upload'
+          title: string | null
+          description: string | null
+          file_url: string | null
+          thumbnail_url: string | null
+          file_size: number | null
+          mime_type: string | null
+          width: number | null
+          height: number | null
+          duration: number | null
+          tags: string[]
+          folder_id: string | null
+          brand_profile_id: string | null
+          is_favorite: boolean
+          ai_model_used: string | null
+          original_prompt: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          workspace_id: string
+          user_id?: string | null
+          type: 'image' | 'video' | 'music' | 'copy' | 'upload'
+          title?: string | null
+          description?: string | null
+          file_url?: string | null
+          thumbnail_url?: string | null
+          file_size?: number | null
+          mime_type?: string | null
+          width?: number | null
+          height?: number | null
+          duration?: number | null
+          tags?: string[]
+          folder_id?: string | null
+          brand_profile_id?: string | null
+          is_favorite?: boolean
+          ai_model_used?: string | null
+          original_prompt?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          workspace_id?: string
+          user_id?: string | null
+          type?: 'image' | 'video' | 'music' | 'copy' | 'upload'
+          title?: string | null
+          description?: string | null
+          file_url?: string | null
+          thumbnail_url?: string | null
+          file_size?: number | null
+          mime_type?: string | null
+          width?: number | null
+          height?: number | null
+          duration?: number | null
+          tags?: string[]
+          folder_id?: string | null
+          brand_profile_id?: string | null
+          is_favorite?: boolean
+          ai_model_used?: string | null
+          original_prompt?: string | null
           created_at?: string
           updated_at?: string
         }
@@ -514,8 +514,14 @@ export interface Database {
         }
       }
     }
-    Views: Record<never, never>
-    Functions: Record<never, never>
-    Enums: Record<never, never>
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      [_ in never]: never
+    }
+    Enums: {
+      [_ in never]: never
+    }
   }
 }

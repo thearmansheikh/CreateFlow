@@ -13,19 +13,23 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: "CreateFlow — AI Creative Content Studio",
-  description: "Generate, manage, and publish creative content with AI. Images, videos, music, and copy — all in one platform.",
-  keywords: ["AI content creation", "content management", "social media", "creative tools"],
+  title: "CreateFlow — Create Everything. Publish Everywhere.",
+  description: "The AI-powered platform for creators — generate images, video, music & copy, then publish to all platforms in one click.",
+  openGraph: {
+    title: "CreateFlow",
+    description: "The AI-powered creative platform for creators and brands.",
+    type: "website",
+  },
 }
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode
-}>) {
+}) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning data-scroll-behavior="smooth">
+      <body className="min-h-screen bg-background antialiased">
         {children}
       </body>
     </html>

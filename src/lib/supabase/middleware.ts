@@ -29,8 +29,10 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
-  // Refresh session if expired
-  await supabase.auth.getUser()
+  // Only sync cookies. Do NOT call getSession() or getUser() here —
+  // that consumes the refresh token and breaks subsequent server component calls.
+  // The browser client handles token refresh on the client side,
+  // and server components call getUser() directly.
 
   return supabaseResponse
 }
