@@ -7,6 +7,7 @@ import { redirect } from "next/navigation"
 
 interface Workspace { id: string; name: string; plan: string }
 interface UserProfile { full_name: string | null; credits_balance: number; total_credits_used: number; subscription_tier: string }
+interface RecentItem { id: string; type: "image" | "video" | "music" | "copy" | "upload"; title: string | null; ai_model_used: string | null; created_at: string }
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -64,6 +65,7 @@ export default async function DashboardPage() {
     .eq("workspace_id", workspaceId)
     .order("created_at", { ascending: false })
     .limit(5)
+    const typedRecentItems = (recentItems || []) as RecentItem[]
 
   return (
     <div className="flex-1 space-y-8 p-6 lg:p-8">
@@ -119,7 +121,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Recent Activity */}
-      {recentItems && recentItems.length > 0 && (
+      {recentItems && typedRecentItems.length > 0 && (
         <div>
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-lg font-semibold">Recent Activity</h2>
@@ -131,11 +133,11 @@ export default async function DashboardPage() {
           </div>
           <Card>
             <CardContent className="p-0">
-              {recentItems.map((item, index) => (
+              {typedRecentItems.map((item: RecentItem, index) => (
                 <div
                   key={item.id}
                   className={`flex items-center gap-4 p-4 ${
-                    index < recentItems.length - 1 ? "border-b" : ""
+                    index < typedRecentItems.length - 1 ? "border-b" : ""
                   }`}
                 >
                   <div
