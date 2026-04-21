@@ -1,0 +1,21 @@
+{
+  "projectRoot": "c:\\Users\\thear\\OneDrive\\Desktop\\CreateFlow\\.ava",
+  "generatedAt": "2026-04-20T21:41:56.137Z",
+  "nodeCount": 286,
+  "brief": "[Project: .ava]\nStack: pnpm\nDecisions: Decision: Oh wow perfect for now. | Decision: Oh wow perfect for now. | Supabase is configured for authentication (sign-in/sign-up) but requires backend connection setup. | The project is configured to use Supabase for authentication and database, but placeholder environm… | The current development focus is on integrating Supabase auth with default workspace creation upon…\nOpen issues: The fix involves a new migration file (`003_fix_signup_trig… | The fix involves a new migration file (`003_fix_signup_trig… | The fix involves a new migration file (`003_fix_signup_trig…\nNodes: 286 active, confidence avg 0.72",
+  "stack": [
+    "pnpm"
+  ],
+  "keyDecisions": [
+    "Decision: Oh wow perfect for now.",
+    "Decision: Oh wow perfect for now.",
+    "Supabase is configured for authentication (sign-in/sign-up) but requires backend connection setup.",
+    "The project is configured to use Supabase for authentication and database, but placeholder environm…",
+    "The current development focus is on integrating Supabase auth with default workspace creation upon…"
+  ],
+  "activeWork": [],
+  "knownPatterns": [],
+  "confidenceAvg": 0.72,
+  "lastSessionDate": "2026-04-20",
+  "graphHash": "286-656-2026-04-20T21:41:55.808Z"
+}
