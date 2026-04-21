@@ -1,6 +1,6 @@
 {
   "version": 3,
-  "lastModified": "2026-04-20T23:58:52.808Z",
+  "lastModified": "2026-04-21T00:27:27.043Z",
   "entries": [
     {
       "id": "84f18f6b-686b-45fb-8264-47b7fa19b1f9",
@@ -338,6 +338,23 @@
       "branch": null,
       "directoryScope": null,
       "archivedAt": null
+    },
+    {
+      "id": "5a64f6a0-a139-42f9-b185-be75d841f53d",
+      "category": "convention",
+      "layer": "project",
+      "content": "Correction: File convention is deprecated. Please use \"proxy\" instead. Learn more: https://nextjs.",
+      "createdAt": "2026-04-21T00:27:27.043Z",
+      "updatedAt": "2026-04-21T00:27:27.043Z",
+      "lastRecalledAt": null,
+      "recallCount": 0,
+      "tags": [
+        "auto-extracted",
+        "correction"
+      ],
+      "archived": false,
+      "branch": null,
+      "directoryScope": null
     }
   ]
 }

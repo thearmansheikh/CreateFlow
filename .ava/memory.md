@@ -87,3 +87,6 @@ Discovery: The fix is applied — no `state.clock` or `getElapsedTime` calls lef
 
 #### 2026-04-20
 Discovery: Test worked fine with those params. The issue is likely the prompt enhancement or negative_prompt pushing the input outside
+
+#### 2026-04-21
+Correction: File convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.
