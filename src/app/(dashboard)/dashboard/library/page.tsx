@@ -3,7 +3,7 @@ import { redirect } from "next/navigation"
 import { LibraryClient } from "./library-client"
 
 interface Workspace { id: string }
-interface Folder { id: string; name: string; color: string | null; icon: string | null; parent_folder_id: string | null }
+interface Folder { id: string; workspace_id: string; name: string; color: string | null; icon: string | null; parent_folder_id: string | null; created_at: string }
 interface ContentItem { id: string; workspace_id: string; user_id: string | null; type: "image" | "video" | "music" | "copy" | "upload"; title: string | null; description: string | null; file_url: string | null; thumbnail_url: string | null; file_size: number | null; mime_type: string | null; width: number | null; height: number | null; duration: number | null; tags: string[]; folder_id: string | null; brand_profile_id: string | null; is_favorite: boolean; ai_model_used: string | null; original_prompt: string | null; created_at: string; updated_at: string }
 
 export default async function LibraryPage() {
