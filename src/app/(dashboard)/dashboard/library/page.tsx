@@ -38,7 +38,7 @@ export default async function LibraryPage() {
 
   const { data: folders } = await supabase
     .from("folders")
-    .select("id, name, color, icon, parent_folder_id")
+    .select("id, workspace_id, name, color, icon, parent_folder_id, created_at")
     .eq("workspace_id", workspaceId)
     .order("name")
 
