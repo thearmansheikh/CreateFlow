@@ -339,3 +339,6 @@ Discovery: A while, so they can't be rebuilt. **The fix is simple:** My last pus
 
 #### 2026-04-24
 Discovery: Specific old deployment from cache. The fix is simple: **push a fresh commit**, which triggers a brand new build.
+
+#### 2026-04-24
+Discovery: Wait 1-2 minutes for it to finish. The fix is already on `main` — Vercel builds from `main` automatically on every push.

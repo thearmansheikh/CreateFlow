@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "lastModified": "2026-04-24T19:06:43.505Z",
+  "lastModified": "2026-04-24T19:29:54.212Z",
   "entries": [
     {
       "id": "102fb6f0-1d5e-430b-b83b-6f53ab00c8b7",
@@ -1154,6 +1154,23 @@
       "content": "Discovery: Specific old deployment from cache. The fix is simple: **push a fresh commit**, which triggers a brand new build.",
       "createdAt": "2026-04-24T19:06:43.505Z",
       "updatedAt": "2026-04-24T19:06:43.505Z",
+      "lastRecalledAt": null,
+      "recallCount": 0,
+      "tags": [
+        "auto-extracted",
+        "discovery"
+      ],
+      "archived": false,
+      "branch": null,
+      "directoryScope": null
+    },
+    {
+      "id": "509316a4-3926-4652-ab0e-03845e4bd1c1",
+      "category": "bug-fix",
+      "layer": "project",
+      "content": "Discovery: Wait 1-2 minutes for it to finish. The fix is already on `main` — Vercel builds from `main` automatically on every push.",
+      "createdAt": "2026-04-24T19:29:54.211Z",
+      "updatedAt": "2026-04-24T19:29:54.211Z",
       "lastRecalledAt": null,
       "recallCount": 0,
       "tags": [
