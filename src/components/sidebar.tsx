@@ -31,6 +31,7 @@ const navItems = [
   { label: "Calendar", href: "/dashboard/calendar", icon: CalendarDays },
   { label: "Analytics", href: "/dashboard/analytics", icon: BarChart3 },
   { label: "Brands", href: "/dashboard/brands", icon: Palette },
+  { label: "Credits", href: "/dashboard/credits", icon: CreditCard },
   { label: "Settings", href: "/dashboard/settings", icon: Settings },
 ]
 
@@ -122,10 +123,10 @@ export function Sidebar({ userName, creditsBalance }: SidebarProps) {
                   <Settings className="h-4 w-4" />
                   Settings
                 </button>
-                <button className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-muted-foreground hover:bg-accent hover:text-foreground">
+                <Link href="/dashboard/settings/billing" className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-muted-foreground hover:bg-accent hover:text-foreground">
                   <CreditCard className="h-4 w-4" />
                   Billing
-                </button>
+                </Link>
                 <button
                   onClick={async () => {
                     const supabase = createClient()
