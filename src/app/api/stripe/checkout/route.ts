@@ -10,9 +10,8 @@ const CREDIT_PRICES: Record<number, number> = {
   1500: 5000,  // $50.00
 }
 
-// Replace with your actual Stripe Price ID for the Pro plan
-// Go to https://dashboard.stripe.com/products → Create product → Copy Price ID
-const PRO_PRICE_ID = 'price_1TPn0TE55wzsYH4tQgsWpzi4'
+// Live Stripe Price ID for CreateFlow Pro ($4.99/mo)
+const PRO_PRICE_ID = 'price_1TPndxCKueHdv9l628CruqMT'
 
 export async function POST(request: NextRequest) {
   try {
