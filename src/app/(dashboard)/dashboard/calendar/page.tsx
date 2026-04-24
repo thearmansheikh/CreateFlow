@@ -128,7 +128,7 @@ export default function CalendarPage() {
 
     const scheduledAt = `${newPost.date}T${newPost.time}:00`
 
-    const { error } = await supabase.from("scheduled_posts").insert({
+    const { error } = await (supabase.from("scheduled_posts") as any).insert({
       caption: newPost.caption,
       platforms: selectedPlatforms,
       scheduled_at: scheduledAt,
