@@ -77,10 +77,10 @@ export async function POST(request: NextRequest) {
         .from('users')
         .select('email')
         .eq('id', user.id)
-        .single()
+        .single() as any
 
       const customer = await stripe.customers.create({
-        email: userProfile?.email || user.email,
+        email: (userProfile as any)?.email || user.email,
         metadata: { userId: user.id },
       })
 

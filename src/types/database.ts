@@ -15,7 +15,8 @@ export interface Database {
           full_name: string | null
           username: string | null
           avatar_url: string | null
-          subscription_tier: 'free' | 'creator' | 'agency' | 'enterprise'
+          email: string | null
+          subscription_tier: 'free' | 'pro' | 'business' | 'enterprise'
           credits_balance: number
           total_credits_used: number
           trial_end_date: string | null
@@ -27,7 +28,8 @@ export interface Database {
           full_name?: string | null
           username?: string | null
           avatar_url?: string | null
-          subscription_tier?: 'free' | 'creator' | 'agency' | 'enterprise'
+          email?: string | null
+          subscription_tier?: 'free' | 'pro' | 'business' | 'enterprise'
           credits_balance?: number
           total_credits_used?: number
           trial_end_date?: string | null
@@ -39,7 +41,7 @@ export interface Database {
           full_name?: string | null
           username?: string | null
           avatar_url?: string | null
-          subscription_tier?: 'free' | 'creator' | 'agency' | 'enterprise'
+          subscription_tier?: 'free' | 'pro' | 'business' | 'enterprise'
           credits_balance?: number
           total_credits_used?: number
           trial_end_date?: string | null
