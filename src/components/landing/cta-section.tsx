@@ -33,7 +33,7 @@ export default function CTASection() {
               className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass text-sm text-purple-400 mb-8"
             >
               <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-              Early access — limited spots
+              Start creating today — no credit card required
             </motion.div>
 
             <motion.h2
@@ -52,8 +52,7 @@ export default function CTASection() {
               transition={{ delay: 0.4 }}
               className="text-lg text-muted-foreground max-w-2xl mx-auto mb-10"
             >
-              Join thousands of creators already on the waitlist. Start creating
-              and publishing AI-powered content — for free.
+              Sign up free and get 50 credits to start creating AI-powered content right away.
             </motion.p>
 
             <motion.div
@@ -67,7 +66,7 @@ export default function CTASection() {
                 className="group relative inline-flex items-center justify-center gap-2 px-10 py-4 rounded-2xl text-base font-semibold text-white overflow-hidden transition-all hover:shadow-[0_0_50px_rgba(124,58,237,0.5)] hover:scale-[1.02] active:scale-[0.98]"
               >
                 <span className="absolute inset-0 bg-gradient-to-r from-purple-600 to-cyan-600" />
-                <span className="relative">Get Early Access</span>
+                <span className="relative">Start for Free</span>
                 <svg className="relative w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>

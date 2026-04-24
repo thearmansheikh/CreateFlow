@@ -33,7 +33,7 @@ export default function HeroSection() {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6"
           >
             <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-            <span className="text-sm text-muted-foreground">Now in early access — Join the waitlist</span>
+            <span className="text-sm text-muted-foreground">Now live — start creating for free</span>
           </motion.div>
 
           <motion.h1
@@ -56,7 +56,7 @@ export default function HeroSection() {
             className="mt-6 text-lg md:text-xl text-muted-foreground max-w-xl mx-auto lg:mx-0 leading-relaxed"
           >
             The AI-powered platform for creators — generate images, video, music
-            &amp; copy, then publish to all platforms in one click.
+            &amp; copy, then schedule and publish to all platforms in one place.
           </motion.p>
 
           {/* CTA Buttons */}
@@ -77,31 +77,27 @@ export default function HeroSection() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
             </Link>
-            <button className="group inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl text-base font-medium text-foreground glass transition-all hover:bg-white/[0.06]">
-              <svg className="w-5 h-5 text-purple-400" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M8 5v14l11-7z" />
+            <Link
+              href="/#features"
+              className="group inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl text-base font-medium text-foreground glass transition-all hover:bg-white/[0.06]"
+            >
+              See Features
+              <svg className="w-4 h-4 transition-transform group-hover:translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
               </svg>
-              Watch Demo
-            </button>
+            </Link>
           </motion.div>
 
-          {/* Social proof mini */}
+          {/* Honest early-access note */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : {}}
             transition={{ delay: 0.8 }}
-            className="mt-10 flex items-center gap-4 justify-center lg:justify-start"
+            className="mt-10 flex items-center gap-3 justify-center lg:justify-start"
           >
-            <div className="flex -space-x-2">
-              {["bg-purple-500", "bg-cyan-500", "bg-pink-500", "bg-yellow-500"].map((bg, i) => (
-                <div key={i} className={`w-8 h-8 rounded-full ${bg} border-2 border-[#0a0a0a] flex items-center justify-center text-[10px] font-bold text-white`}>
-                  {["A", "B", "C", "D"][i]}
-                </div>
-              ))}
-            </div>
-            <div className="text-sm text-muted-foreground">
-              <span className="text-foreground font-semibold">2,400+</span> creators on the waitlist
-            </div>
+            <span className="text-sm text-muted-foreground">
+              50 free credits on signup — no credit card required
+            </span>
           </motion.div>
         </motion.div>
 

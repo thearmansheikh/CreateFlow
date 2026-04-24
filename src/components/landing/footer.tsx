@@ -54,16 +54,13 @@ const footerLinks = {
   Product: [
     { label: "Features", href: "/#features" },
     { label: "Pricing", href: "/#pricing" },
-    { label: "Roadmap", href: "#" },
   ],
   Resources: [
-    { label: "Documentation", href: "#" },
     { label: "Help Center", href: "mailto:hello@thearmansheikh.co" },
-    { label: "API", href: "#" },
   ],
   Legal: [
-    { label: "Privacy", href: "#" },
-    { label: "Terms", href: "#" },
+    { label: "Privacy", href: "/privacy" },
+    { label: "Terms", href: "/terms" },
   ],
 }
 
