@@ -51,10 +51,20 @@ const socialLinks = [
 ]
 
 const footerLinks = {
-  Product: ["Features", "Pricing", "Integrations", "Changelog", "Roadmap"],
-  Company: ["About", "Blog", "Careers", "Press", "Partners"],
-  Resources: ["Documentation", "Help Center", "Community", "Templates", "API"],
-  Legal: ["Privacy", "Terms", "Security", "Cookies"],
+  Product: [
+    { label: "Features", href: "/#features" },
+    { label: "Pricing", href: "/#pricing" },
+    { label: "Roadmap", href: "#" },
+  ],
+  Resources: [
+    { label: "Documentation", href: "#" },
+    { label: "Help Center", href: "mailto:hello@thearmansheikh.co" },
+    { label: "API", href: "#" },
+  ],
+  Legal: [
+    { label: "Privacy", href: "#" },
+    { label: "Terms", href: "#" },
+  ],
 }
 
 export default function Footer() {
@@ -97,13 +107,13 @@ export default function Footer() {
               <h4 className="text-sm font-semibold mb-4">{title}</h4>
               <ul className="space-y-3">
                 {links.map((link) => (
-                  <li key={link}>
-                    <Link
-                      href="#"
+                  <li key={link.label}>
+                    <a
+                      href={link.href}
                       className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                     >
-                      {link}
-                    </Link>
+                      {link.label}
+                    </a>
                   </li>
                 ))}
               </ul>
@@ -117,7 +127,7 @@ export default function Footer() {
             &copy; {new Date().getFullYear()} CreateFlow. All rights reserved.
           </p>
           <p className="text-xs text-muted-foreground">
-            Built with Next.js, Tailwind CSS &amp; Three.js
+            Built with Next.js, Tailwind CSS & Three.js
           </p>
         </div>
       </div>
