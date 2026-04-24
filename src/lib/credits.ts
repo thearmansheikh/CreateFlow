@@ -32,7 +32,7 @@ export async function deductCredits(
     .from('users')
     .select('credits_balance, total_credits_used')
     .eq('id', userId)
-    .single()
+    .single() as any
 
   if (userError || !user) {
     return { success: false, balanceAfter: 0, error: 'Could not fetch user balance' }
@@ -53,7 +53,7 @@ export async function deductCredits(
     .from('workspace_members')
     .select('workspace_id')
     .eq('user_id', userId)
-    .single()
+    .single() as any
 
   // Deduct balance
   const { error: updateError } = await supabase
@@ -95,13 +95,13 @@ export async function addCredits(
     .from('workspace_members')
     .select('workspace_id')
     .eq('user_id', userId)
-    .single()
+    .single() as any
 
   const { data: user, error: userError } = await supabase
     .from('users')
     .select('credits_balance')
     .eq('id', userId)
-    .single()
+    .single() as any
 
   if (userError || !user) return false
 

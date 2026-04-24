@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "lastModified": "2026-04-24T17:50:52.313Z",
+  "lastModified": "2026-04-24T19:06:43.505Z",
   "entries": [
     {
       "id": "102fb6f0-1d5e-430b-b83b-6f53ab00c8b7",
@@ -1111,6 +1111,58 @@
       "lastRecalledAt": null,
       "recallCount": 0,
       "archived": false
+    },
+    {
+      "id": "be593b2c-2237-4ad6-886e-ee814856d715",
+      "category": "decision",
+      "layer": "project",
+      "content": "Decision: Here we go with the live product price id also let me know anything else to do",
+      "createdAt": "2026-04-24T18:41:56.268Z",
+      "updatedAt": "2026-04-24T18:41:56.268Z",
+      "lastRecalledAt": null,
+      "recallCount": 0,
+      "tags": [
+        "auto-extracted",
+        "approval"
+      ],
+      "archived": false,
+      "branch": null,
+      "directoryScope": null
+    },
+    {
+      "id": "2463c93c-f380-48f1-bfe8-99b7eeaf7e94",
+      "category": "bug-fix",
+      "layer": "project",
+      "content": "Discovery: A while, so they can't be rebuilt. **The fix is simple:** My last push (`aaf4001`) already triggered a **brand new**",
+      "createdAt": "2026-04-24T18:47:38.781Z",
+      "updatedAt": "2026-04-24T18:51:54.671Z",
+      "lastRecalledAt": null,
+      "recallCount": 0,
+      "tags": [
+        "auto-extracted",
+        "discovery"
+      ],
+      "archived": false,
+      "branch": null,
+      "directoryScope": null,
+      "archivedAt": null
+    },
+    {
+      "id": "80f9ebf0-7331-40c3-9552-a0896654c1e9",
+      "category": "bug-fix",
+      "layer": "project",
+      "content": "Discovery: Specific old deployment from cache. The fix is simple: **push a fresh commit**, which triggers a brand new build.",
+      "createdAt": "2026-04-24T19:06:43.505Z",
+      "updatedAt": "2026-04-24T19:06:43.505Z",
+      "lastRecalledAt": null,
+      "recallCount": 0,
+      "tags": [
+        "auto-extracted",
+        "discovery"
+      ],
+      "archived": false,
+      "branch": null,
+      "directoryScope": null
     }
   ]
 }

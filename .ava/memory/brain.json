@@ -1,8 +1,8 @@
 {
   "projectRoot": "c:\\Users\\thear\\OneDrive\\Desktop\\CreateFlow\\.ava",
-  "generatedAt": "2026-04-21T00:54:34.639Z",
-  "nodeCount": 348,
-  "brief": "[Project: .ava]\nStack: pnpm\nDecisions: Decision: Oh wow perfect for now. | Decision: Oh wow perfect for now. | Decision: Oh wow perfect for now. | Decision: Oh wow perfect for now. | Supabase is configured for authentication (sign-in/sign-up) but requires backend connection setup.\nOpen issues: The fix involves a new migration file (`003_fix_signup_trig… | The fix involves a new migration file (`003_fix_signup_trig… | The fix involves a new migration file (`003_fix_signup_trig…\nNodes: 348 active, confidence avg 0.72",
+  "generatedAt": "2026-04-24T17:50:54.982Z",
+  "nodeCount": 1389,
+  "brief": "[Project: .ava]\nStack: pnpm\nDecisions: Decision: Oh wow perfect for now. | Decision: Oh wow perfect for now. | Decision: Oh wow perfect for now. | Decision: Perfect now here we go with the new domains https://createflow-md.vercel. | Decision: Perfect now here we go with the new domains https://createflow-md.vercel.\nOpen issues: The build process currently passes with zero errors after f… | The build process currently passes with zero errors after f… | The build process currently passes with zero errors after f…\nNodes: 1389 active, confidence avg 0.66",
   "stack": [
     "pnpm"
   ],
@@ -10,12 +10,12 @@
     "Decision: Oh wow perfect for now.",
     "Decision: Oh wow perfect for now.",
     "Decision: Oh wow perfect for now.",
-    "Decision: Oh wow perfect for now.",
-    "Supabase is configured for authentication (sign-in/sign-up) but requires backend connection setup."
+    "Decision: Perfect now here we go with the new domains https://createflow-md.vercel.",
+    "Decision: Perfect now here we go with the new domains https://createflow-md.vercel."
   ],
   "activeWork": [],
   "knownPatterns": [],
-  "confidenceAvg": 0.72,
+  "confidenceAvg": 0.66,
   "lastSessionDate": "2026-04-21",
-  "graphHash": "348-829-2026-04-21T00:54:34.534Z"
+  "graphHash": "1389-3945-2026-04-24T17:50:54.838Z"
 }

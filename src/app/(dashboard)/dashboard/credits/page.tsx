@@ -50,7 +50,7 @@ export default function CreditsPage() {
       .from("users")
       .select("credits_balance")
       .eq("id", user.id)
-      .single()
+      .single() as any
 
     setCreditsBalance(userData?.credits_balance || 0)
 
