@@ -1,6 +1,8 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import { useState, useCallback, useEffect } from "react"
+import { createClient } from "@/lib/supabase/client"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -15,33 +17,25 @@ import {
   Mic2,
   Type,
   Eye,
-  Music,
+  Loader2,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-// Demo data
-const demoBrands = [
-  {
-    id: "b1",
-    name: "Acme Studio",
-    description: "Modern tech brand with a playful tone",
-    voiceTone: { tone: "professional", personality: "friendly", language: "en" },
-    visualStyle: { mood: "modern", complexity: "minimal" },
-    brandColors: ["#8b5cf6", "#06b6d4", "#f59e0b"],
-    brandFonts: ["Inter", "Geist"],
-    isDefault: true,
-  },
-  {
-    id: "b2",
-    name: "Sunrise Coffee",
-    description: "Warm, cozy café brand",
-    voiceTone: { tone: "casual", personality: "warm", language: "en" },
-    visualStyle: { mood: "warm", complexity: "detailed" },
-    brandColors: ["#92400e", "#d97706", "#fef3c7"],
-    brandFonts: ["Georgia", "Playfair Display"],
-    isDefault: false,
-  },
-]
+interface BrandProfile {
+  id: string
+  workspace_id: string
+  name: string
+  description: string | null
+  voice_tone: { tone?: string; personality?: string; language?: string } | null
+  visual_style: { mood?: string; complexity?: string } | null
+  logo_url: string | null
+  brand_colors: string[] | null
+  brand_fonts: string[] | null
+  brand_examples: string[] | null
+  is_default: boolean
+  created_at: string
+  updated_at: string
+}
 
 const presetPalettes = [
   { name: "Violet", colors: ["#8b5cf6", "#a78bfa", "#c4b5fd", "#ddd6fe", "#ede9fe"] },
@@ -71,27 +65,112 @@ const personalityOptions = [
 ]
 
 export default function BrandsPage() {
-  const [brands, setBrands] = useState(demoBrands)
-  const [editingBrand, setEditingBrand] = useState<any | null>(null)
+  const supabase = createClient()
+  const router = useRouter()
+  const [brands, setBrands] = useState<BrandProfile[]>([])
+  const [editingBrand, setEditingBrand] = useState<BrandProfile | null>(null)
   const [isCreating, setIsCreating] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [workspaceId, setWorkspaceId] = useState<string | null>(null)
 
-  const handleSave = (brand: any) => {
-    if (brand.id) {
-      setBrands((prev) => prev.map((b) => (b.id === brand.id ? brand : b)))
-    } else {
-      const newBrand = { ...brand, id: `b${Date.now()}` }
-      setBrands((prev) => [...prev, newBrand])
+  const loadBrands = useCallback(async () => {
+    setLoading(true)
+
+    // Get user's workspace
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      router.push("/auth/sign-in")
+      return
     }
-    setEditingBrand(null)
-    setIsCreating(false)
+
+    const { data: member } = await supabase
+      .from("workspace_members")
+      .select("workspace_id")
+      .eq("user_id", user.id)
+      .single() as any
+
+    if (!member) {
+      setLoading(false)
+      return
+    }
+
+    setWorkspaceId(member.workspace_id)
+
+    const { data } = await supabase
+      .from("brand_profiles")
+      .select("*")
+      .eq("workspace_id", member.workspace_id)
+      .order("is_default", { ascending: false })
+      .order("created_at", { ascending: false })
+
+    setBrands((data || []) as BrandProfile[])
+    setLoading(false)
+  }, [supabase, router])
+
+  useEffect(() => {
+    loadBrands()
+  }, [loadBrands])
+
+  const handleSave = async (brandData: Partial<BrandProfile>) => {
+    if (!workspaceId) return
+
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+
+    const payload = {
+      workspace_id: workspaceId,
+      name: brandData.name || "",
+      description: brandData.description || null,
+      voice_tone: brandData.voice_tone || null,
+      visual_style: brandData.visual_style || null,
+      logo_url: brandData.logo_url || null,
+      brand_colors: brandData.brand_colors || null,
+      brand_fonts: brandData.brand_fonts || null,
+      brand_examples: brandData.brand_examples || null,
+      is_default: brandData.is_default || false,
+    }
+
+    if (brandData.id) {
+      // Update existing
+      const { error } = await supabase
+        .from("brand_profiles")
+        .update(payload as any)
+        .eq("id", brandData.id)
+
+      if (!error) {
+        setEditingBrand(null)
+        setIsCreating(false)
+        loadBrands()
+      }
+    } else {
+      // Create new
+      const { error } = await supabase
+        .from("brand_profiles")
+        .insert(payload)
+
+      if (!error) {
+        setEditingBrand(null)
+        setIsCreating(false)
+        loadBrands()
+      }
+    }
   }
 
-  const handleDelete = (id: string) => {
-    setBrands((prev) => prev.filter((b) => b.id !== id))
+  const handleDelete = async (id: string) => {
+    await supabase.from("brand_profiles").delete().eq("id", id)
+    loadBrands()
+  }
+
+  if (loading) {
+    return (
+      <div className="flex-1 flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    )
   }
 
   return (
-    <div className="flex-1 space-y-8 p-6 lg:p-8">
+    <div className="flex-1 space-y-8 overflow-auto p-6 lg:p-8">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Brand Kits</h1>
@@ -111,117 +190,139 @@ export default function BrandsPage() {
         />
       )}
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {brands.map((brand) => (
-          <Card key={brand.id} className="group relative transition-all hover:border-primary/50">
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div>
-                  <CardTitle className="flex items-center gap-2">
-                    {brand.name}
-                    {brand.isDefault && (
-                      <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
-                        Default
+      {brands.length === 0 ? (
+        <Card>
+          <CardContent className="flex flex-col items-center justify-center py-16">
+            <Palette className="mb-4 h-12 w-12 text-muted-foreground/40" />
+            <h3 className="text-lg font-medium">No brand kits yet</h3>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Create your first brand kit to define your voice and visual style.
+            </p>
+            <Button className="mt-4" onClick={() => { setIsCreating(true); setEditingBrand(null) }}>
+              <Plus className="mr-2 h-4 w-4" />
+              Create Brand Kit
+            </Button>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {brands.map((brand) => (
+            <Card key={brand.id} className="group relative transition-all hover:border-primary/50">
+              <CardHeader>
+                <div className="flex items-start justify-between">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      {brand.name}
+                      {brand.is_default && (
+                        <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-medium text-primary">
+                          Default
+                        </span>
+                      )}
+                    </CardTitle>
+                    <CardDescription>{brand.description}</CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {/* Colors */}
+                {brand.brand_colors && brand.brand_colors.length > 0 && (
+                  <div>
+                    <p className="mb-2 text-xs font-medium text-muted-foreground">Brand Colors</p>
+                    <div className="flex gap-1.5">
+                      {brand.brand_colors.map((color, i) => (
+                        <div
+                          key={i}
+                          className="h-6 w-6 rounded-full border border-border/50"
+                          style={{ backgroundColor: color }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Voice */}
+                {brand.voice_tone && (
+                  <div className="space-y-1.5">
+                    <p className="text-xs font-medium text-muted-foreground">Voice & Tone</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      <span className="rounded-full bg-secondary px-2 py-0.5 text-xs capitalize">
+                        <Mic2 className="mr-1 inline h-3 w-3" />
+                        {brand.voice_tone.tone}
                       </span>
-                    )}
-                  </CardTitle>
-                  <CardDescription>{brand.description}</CardDescription>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {/* Colors */}
-              <div>
-                <p className="mb-2 text-xs font-medium text-muted-foreground">Brand Colors</p>
-                <div className="flex gap-1.5">
-                  {brand.brandColors.map((color, i) => (
-                    <div
-                      key={i}
-                      className="h-6 w-6 rounded-full border border-border/50"
-                      style={{ backgroundColor: color }}
-                    />
-                  ))}
-                </div>
-              </div>
+                      <span className="rounded-full bg-secondary px-2 py-0.5 text-xs capitalize">
+                        {brand.voice_tone.personality}
+                      </span>
+                    </div>
+                  </div>
+                )}
 
-              {/* Voice */}
-              <div className="space-y-1.5">
-                <p className="text-xs font-medium text-muted-foreground">Voice & Tone</p>
-                <div className="flex flex-wrap gap-1.5">
-                  <span className="rounded-full bg-secondary px-2 py-0.5 text-xs capitalize">
-                    <Mic2 className="mr-1 inline h-3 w-3" />
-                    {brand.voiceTone?.tone}
-                  </span>
-                  <span className="rounded-full bg-secondary px-2 py-0.5 text-xs capitalize">
-                    {brand.voiceTone?.personality}
-                  </span>
-                </div>
-              </div>
-
-              {/* Fonts */}
-              <div className="space-y-1.5">
-                <p className="text-xs font-medium text-muted-foreground">Typography</p>
-                <div className="flex flex-wrap gap-1.5">
-                  {brand.brandFonts?.map((font) => (
-                    <span key={font} className="rounded-full bg-secondary px-2 py-0.5 text-xs">
-                      <Type className="mr-1 inline h-3 w-3" />
-                      {font}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </CardContent>
-            <CardFooter className="flex gap-2 border-t border-border/50 pt-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="flex-1"
-                onClick={() => { setEditingBrand(brand); setIsCreating(false) }}
-              >
-                <Edit2 className="mr-1.5 h-3.5 w-3.5" />
-                Edit
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-destructive hover:text-destructive"
-                onClick={() => handleDelete(brand.id)}
-              >
-                <Trash2 className="h-3.5 w-3.5" />
-              </Button>
-            </CardFooter>
-          </Card>
-        ))}
-      </div>
+                {/* Fonts */}
+                {brand.brand_fonts && brand.brand_fonts.length > 0 && (
+                  <div className="space-y-1.5">
+                    <p className="text-xs font-medium text-muted-foreground">Typography</p>
+                    <div className="flex flex-wrap gap-1.5">
+                      {brand.brand_fonts.map((font) => (
+                        <span key={font} className="rounded-full bg-secondary px-2 py-0.5 text-xs">
+                          <Type className="mr-1 inline h-3 w-3" />
+                          {font}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+              <CardFooter className="flex gap-2 border-t border-border/50 pt-4">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="flex-1"
+                  onClick={() => { setEditingBrand(brand); setIsCreating(false) }}
+                >
+                  <Edit2 className="mr-1.5 h-3.5 w-3.5" />
+                  Edit
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-destructive hover:text-destructive"
+                  onClick={() => handleDelete(brand.id)}
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </Button>
+              </CardFooter>
+            </Card>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
 
 function BrandForm({ brand, onSave, onCancel }: {
-  brand: any
-  onSave: (brand: any) => void
+  brand: BrandProfile | null
+  onSave: (brand: Partial<BrandProfile>) => void
   onCancel: () => void
 }) {
   const [name, setName] = useState(brand?.name || "")
   const [description, setDescription] = useState(brand?.description || "")
-  const [tone, setTone] = useState(brand?.voiceTone?.tone || "professional")
-  const [personality, setPersonality] = useState(brand?.voiceTone?.personality || "friendly")
-  const [mood, setMood] = useState(brand?.visualStyle?.mood || "modern")
-  const [colors, setColors] = useState<string[]>(brand?.brandColors || [])
-  const [fonts, setFonts] = useState<string>(brand?.brandFonts?.join(", ") || "")
-  const [logoUrl, setLogoUrl] = useState(brand?.logoUrl || "")
+  const [tone, setTone] = useState(brand?.voice_tone?.tone || "professional")
+  const [personality, setPersonality] = useState(brand?.voice_tone?.personality || "friendly")
+  const [mood, setMood] = useState(brand?.visual_style?.mood || "modern")
+  const [colors, setColors] = useState<string[]>(brand?.brand_colors || [])
+  const [fonts, setFonts] = useState<string>(brand?.brand_fonts?.join(", ") || "")
+  const [logoUrl, setLogoUrl] = useState(brand?.logo_url || "")
 
   const handleSave = () => {
     if (!name.trim()) return
     onSave({
-      ...brand,
+      id: brand?.id,
       name: name.trim(),
       description: description.trim(),
-      voiceTone: { tone, personality, language: "en" },
-      visualStyle: { mood },
-      brandColors: colors,
-      brandFonts: fonts.split(",").map((f) => f.trim()).filter(Boolean),
-      logoUrl: logoUrl.trim(),
+      voice_tone: { tone, personality, language: "en" },
+      visual_style: { mood },
+      brand_colors: colors,
+      brand_fonts: fonts.split(",").map((f) => f.trim()).filter(Boolean),
+      logo_url: logoUrl.trim(),
     })
   }
 

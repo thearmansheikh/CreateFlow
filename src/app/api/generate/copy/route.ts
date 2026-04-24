@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
+import { createClient } from '@/lib/supabase/server'
+import { deductCredits, CREDIT_COSTS } from '@/lib/credits'
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -20,8 +22,22 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Prompt is required' }, { status: 400 })
     }
 
+    // Auth check
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    // Deduct credits
+    const creditResult = await deductCredits(user.id, 'copy')
+    if (!creditResult.success) {
+      return NextResponse.json({ error: creditResult.error, balance: creditResult.balanceAfter }, { status: 402 })
+    }
+
     const systemPrompt = `You are a professional copywriter specializing in ${type === 'caption' ? 'social media content' : type === 'blog' ? 'long-form blog content' : type === 'tweet' ? 'Twitter/X posts' : type === 'email' ? 'email marketing' : 'product descriptions'}. 
 ${brandContext ? `Match the brand voice: ${brandContext}.` : 'Use a professional and engaging tone.'}
+Tone: ${tone}.
 Keep responses under ${maxLength} characters unless the type requires longer content.`
 
     const message = await anthropic.messages.create({
@@ -42,7 +58,8 @@ Keep responses under ${maxLength} characters unless the type requires longer con
       success: true,
       content,
       model: 'claude-sonnet-4-20250514',
-      creditsUsed: 1,
+      creditsUsed: CREDIT_COSTS.copy,
+      balance: creditResult.balanceAfter,
     })
   } catch (error: any) {
     console.error('Copy generation error:', error)

@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@/lib/supabase/server'
+import { deductCredits, CREDIT_COSTS } from '@/lib/credits'
 
 const BASE_URL = 'https://api.minimax.io'
 const API_KEY = process.env.MINIMAX_API_KEY
-const MODEL = 'music-2.6-free' // free tier model
+const MODEL = 'music-2.6-free'
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,6 +17,19 @@ export async function POST(request: NextRequest) {
 
     if (!API_KEY) {
       return NextResponse.json({ error: 'MINIMAX_API_KEY not configured' }, { status: 500 })
+    }
+
+    // Auth check
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    // Deduct credits before generating
+    const creditResult = await deductCredits(user.id, 'music')
+    if (!creditResult.success) {
+      return NextResponse.json({ error: creditResult.error, balance: creditResult.balanceAfter }, { status: 402 })
     }
 
     // Music generation is synchronous — returns hex-encoded audio
@@ -72,7 +87,8 @@ export async function POST(request: NextRequest) {
       audioUrl: dataUrl,
       model: MODEL,
       duration: data.extra_info?.music_duration || 0,
-      creditsUsed: 5,
+      creditsUsed: CREDIT_COSTS.music,
+      balance: creditResult.balanceAfter,
     })
   } catch (error: any) {
     console.error('Music generation error:', error)

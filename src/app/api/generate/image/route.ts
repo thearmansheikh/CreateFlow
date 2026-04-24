@@ -1,5 +1,7 @@
 import Replicate from "replicate"
 import { NextRequest, NextResponse } from "next/server"
+import { createClient } from "@/lib/supabase/server"
+import { deductCredits } from "@/lib/credits"
 
 const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
@@ -13,10 +15,26 @@ export async function POST(req: NextRequest) {
     const body = await req.json()
     console.log("Request body:", JSON.stringify(body, null, 2))
 
-    const { prompt, aspectRatio, style, numOutputs = 1 } = body
+    const { prompt, aspectRatio, style, numOutputs = 1, workspaceId } = body
 
     if (!prompt) {
       return NextResponse.json({ error: "Prompt is required" }, { status: 400 })
+    }
+
+    // Auth & workspace check
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+
+    // Deduct credits before generating
+    const creditResult = await deductCredits(user.id, "image")
+    if (!creditResult.success) {
+      return NextResponse.json(
+        { error: creditResult.error, balance: creditResult.balanceAfter },
+        { status: 402 }
+      )
     }
 
     // Build prompt
@@ -72,6 +90,8 @@ export async function POST(req: NextRequest) {
       success: true,
       images,
       model: "flux-schnell",
+      creditsUsed: 3,
+      balance: creditResult.balanceAfter,
     })
   } catch (error: any) {
     console.error("=== IMAGE GEN ERROR ===")

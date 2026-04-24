@@ -80,21 +80,21 @@ export interface Database {
         Row: {
           id: string
           workspace_id: string
-          user_id: string
+          user_id: string | null
           role: 'owner' | 'admin' | 'editor' | 'viewer'
           created_at: string
         }
         Insert: {
           id?: string
           workspace_id: string
-          user_id: string
+          user_id?: string | null
           role?: 'owner' | 'admin' | 'editor' | 'viewer'
           created_at?: string
         }
         Update: {
           id?: string
           workspace_id?: string
-          user_id?: string
+          user_id?: string | null
           role?: 'owner' | 'admin' | 'editor' | 'viewer'
           created_at?: string
         }

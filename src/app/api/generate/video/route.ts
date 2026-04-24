@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { createClient } from '@/lib/supabase/server'
+import { deductCredits, CREDIT_COSTS } from '@/lib/credits'
 
 const BASE_URL = 'https://api.minimax.io'
 const API_KEY = process.env.MINIMAX_API_KEY
@@ -68,6 +70,19 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'MINIMAX_API_KEY not configured' }, { status: 500 })
     }
 
+    // Auth check
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    // Deduct credits before creating task
+    const creditResult = await deductCredits(user.id, 'video')
+    if (!creditResult.success) {
+      return NextResponse.json({ error: creditResult.error, balance: creditResult.balanceAfter }, { status: 402 })
+    }
+
     const { task_id, base_resp } = await createVideoTask(prompt, normalizedDuration, normalizedResolution)
 
     if (base_resp?.status_code !== 0) {
@@ -80,7 +95,8 @@ export async function POST(request: NextRequest) {
       success: true,
       taskId: task_id,
       model: MODEL,
-      creditsUsed: 10,
+      creditsUsed: CREDIT_COSTS.video,
+      balance: creditResult.balanceAfter,
     })
   } catch (error: any) {
     console.error('Video generation error:', error)
