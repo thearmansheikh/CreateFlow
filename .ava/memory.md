@@ -342,3 +342,12 @@ Discovery: Specific old deployment from cache. The fix is simple: **push a fresh
 
 #### 2026-04-24
 Discovery: Wait 1-2 minutes for it to finish. The fix is already on `main` — Vercel builds from `main` automatically on every push.
+
+#### 2026-04-24
+Discovery: Query. No more piecemeal deploys. The root cause was simple: Supabase's generated TypeScript types (`src/types/database.
+
+#### 2026-04-24
+Discovery: Fixed the callback handler. The issue was it was trying to read a session that didn't exist yet — when Google redirects
+
+#### 2026-04-24
+Discovery: The issue is I put a `GET` export in a `page.

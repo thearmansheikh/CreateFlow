@@ -3,14 +3,14 @@
 import { useRef } from "react"
 import Link from "next/link"
 import { motion, useInView } from "framer-motion"
-import { Check, Sparkles, Crown, Zap } from "lucide-react"
+import { Check, Sparkles, Crown, Zap, HelpCircle } from "lucide-react"
 
 const plans = [
   {
     name: "Free",
     icon: Sparkles,
-    price: "$0",
-    description: "50 credits — perfect for trying out CreateFlow",
+    price: "\u00A30",
+    description: "50 credits \u2014 perfect for trying out CreateFlow",
     features: [
       "50 credits on signup",
       "AI image & copy generation",
@@ -25,7 +25,7 @@ const plans = [
   {
     name: "Pro",
     icon: Zap,
-    price: "$4.99",
+    price: "\u00A34.99",
     period: "/month",
     description: "For serious content creators",
     features: [
@@ -38,8 +38,9 @@ const plans = [
       "No watermarks",
       "Priority support",
     ],
-    cta: "Start for $4.99",
+    cta: "Start for \u00A34.99",
     popular: true,
+    launchPrice: true,
   },
   {
     name: "Business",
@@ -59,6 +60,15 @@ const plans = [
     cta: "Contact Sales",
     popular: false,
   },
+]
+
+const creditBreakdown = [
+  { action: "Generate an image", cost: "1 credit" },
+  { action: "Write social copy", cost: "1 credit" },
+  { action: "Generate a video clip", cost: "10 credits" },
+  { action: "Generate a music track", cost: "20 credits" },
+  { action: "Repurpose content", cost: "2 credits" },
+  { action: "Schedule & publish", cost: "1 credit" },
 ]
 
 const containerVariants = {
@@ -104,6 +114,9 @@ export default function PricingSection() {
           <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
             Start free, scale as you grow. No hidden fees, cancel anytime.
           </p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            All prices shown in GBP. Your card will be billed in USD at the current exchange rate.
+          </p>
         </motion.div>
 
         {/* Pricing cards */}
@@ -126,7 +139,7 @@ export default function PricingSection() {
               {/* Popular badge */}
               {plan.popular && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-purple-600 to-cyan-600 px-4 py-1 text-xs font-semibold text-white shadow-lg">
-                  Most Popular
+                  \U0001f389 Launch Price
                 </div>
               )}
 
@@ -186,6 +199,35 @@ export default function PricingSection() {
               )}
             </motion.div>
           ))}
+        </motion.div>
+
+        {/* Credit breakdown */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="mt-20 max-w-3xl mx-auto"
+        >
+          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-8">
+            <div className="flex items-center gap-2 mb-6">
+              <HelpCircle className="h-5 w-5 text-primary" />
+              <h3 className="text-lg font-semibold">What does 1 credit get you?</h3>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {creditBreakdown.map((item) => (
+                <div
+                  key={item.action}
+                  className="flex items-center justify-between rounded-xl border border-white/5 bg-white/[0.02] px-4 py-3"
+                >
+                  <span className="text-sm text-muted-foreground">{item.action}</span>
+                  <span className="text-sm font-medium text-primary">{item.cost}</span>
+                </div>
+              ))}
+            </div>
+            <p className="mt-4 text-xs text-muted-foreground text-center">
+              Credits refresh monthly on paid plans. Unused credits from the Free plan do not roll over.
+            </p>
+          </div>
         </motion.div>
       </div>
     </section>

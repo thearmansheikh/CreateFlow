@@ -2,6 +2,7 @@
 
 import { useRef } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { motion, useInView } from "framer-motion"
 
 export default function HeroSection() {
@@ -113,10 +114,12 @@ export default function HeroSection() {
           <div className="relative h-full rounded-2xl overflow-hidden glass animate-float group">
             {/* Gradient border overlay */}
             <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-purple-500/10 to-cyan-500/10 z-10 pointer-events-none" />
-            <img
+            <Image
               src="/images/hero-dashboard.png"
-              alt="CreateFlow - AI-powered creative platform preview"
-              className="w-full h-full object-cover"
+              alt="CreateFlow dashboard showing the content creation workspace with AI tools"
+              fill
+              priority
+              className="object-cover"
             />
             {/* Subtle vignette overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0a]/40 via-transparent to-transparent z-10 pointer-events-none" />

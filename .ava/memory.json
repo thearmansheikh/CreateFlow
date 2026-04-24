@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "lastModified": "2026-04-24T19:29:54.212Z",
+  "lastModified": "2026-04-24T22:41:25.952Z",
   "entries": [
     {
       "id": "102fb6f0-1d5e-430b-b83b-6f53ab00c8b7",
@@ -1171,6 +1171,58 @@
       "content": "Discovery: Wait 1-2 minutes for it to finish. The fix is already on `main` — Vercel builds from `main` automatically on every push.",
       "createdAt": "2026-04-24T19:29:54.211Z",
       "updatedAt": "2026-04-24T19:29:54.211Z",
+      "lastRecalledAt": null,
+      "recallCount": 0,
+      "tags": [
+        "auto-extracted",
+        "discovery"
+      ],
+      "archived": false,
+      "branch": null,
+      "directoryScope": null
+    },
+    {
+      "id": "e9fbf263-1c10-4b8e-95fa-e7c0008d56de",
+      "category": "bug-fix",
+      "layer": "project",
+      "content": "Discovery: Query. No more piecemeal deploys. The root cause was simple: Supabase's generated TypeScript types (`src/types/database.",
+      "createdAt": "2026-04-24T19:42:19.006Z",
+      "updatedAt": "2026-04-24T19:44:43.839Z",
+      "lastRecalledAt": null,
+      "recallCount": 0,
+      "tags": [
+        "auto-extracted",
+        "discovery"
+      ],
+      "archived": false,
+      "branch": null,
+      "directoryScope": null,
+      "archivedAt": null
+    },
+    {
+      "id": "ad15f799-78f8-43b2-9f0a-32cdea1ab82a",
+      "category": "bug-fix",
+      "layer": "project",
+      "content": "Discovery: Fixed the callback handler. The issue was it was trying to read a session that didn't exist yet — when Google redirects",
+      "createdAt": "2026-04-24T22:37:40.285Z",
+      "updatedAt": "2026-04-24T22:37:40.286Z",
+      "lastRecalledAt": null,
+      "recallCount": 0,
+      "tags": [
+        "auto-extracted",
+        "discovery"
+      ],
+      "archived": false,
+      "branch": null,
+      "directoryScope": null
+    },
+    {
+      "id": "c5f54cce-21a1-4d3f-b489-53125fee822e",
+      "category": "bug-fix",
+      "layer": "project",
+      "content": "Discovery: The issue is I put a `GET` export in a `page.",
+      "createdAt": "2026-04-24T22:41:25.951Z",
+      "updatedAt": "2026-04-24T22:41:25.951Z",
       "lastRecalledAt": null,
       "recallCount": 0,
       "tags": [

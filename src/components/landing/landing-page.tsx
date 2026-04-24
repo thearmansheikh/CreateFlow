@@ -5,6 +5,7 @@ import Navbar from "@/components/landing/navbar"
 import HeroSection from "@/components/landing/hero-section"
 import FeaturesSection from "@/components/landing/features-section"
 import HowItWorksSection from "@/components/landing/how-it-works"
+import AboutSection from "@/components/landing/about-section"
 import SocialProofSection from "@/components/landing/social-proof"
 import PricingSection from "@/components/landing/pricing-section"
 import CTASection from "@/components/landing/cta-section"
@@ -20,12 +21,15 @@ export default function LandingPage() {
     <div className="relative min-h-screen">
       <ParticleBackground />
       <Navbar />
-      <HeroSection />
-      <FeaturesSection />
-      <HowItWorksSection />
-      <SocialProofSection />
-      <PricingSection />
-      <CTASection />
+      <main id="main-content" role="main">
+        <HeroSection />
+        <FeaturesSection />
+        <HowItWorksSection />
+        <AboutSection />
+        <SocialProofSection />
+        <PricingSection />
+        <CTASection />
+      </main>
       <Footer />
     </div>
   )
