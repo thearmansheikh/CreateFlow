@@ -143,8 +143,7 @@ export default function BrandsPage() {
       }
     } else {
       // Create new
-      const { error } = await supabase
-        .from("brand_profiles")
+      const { error } = await (supabase.from("brand_profiles") as any)
         .insert(payload)
 
       if (!error) {
