@@ -10,10 +10,14 @@ const CREDIT_PRICES: Record<number, number> = {
   1500: 5000,  // $50.00
 }
 
+// Replace with your actual Stripe Price ID for the Pro plan
+// Go to https://dashboard.stripe.com/products → Create product → Copy Price ID
+const PRO_PRICE_ID = 'price_1TPn0TE55wzsYH4tQgsWpzi4'
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { type, priceId, credits } = body
+    const { type, credits } = body
 
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
@@ -24,7 +28,7 @@ export async function POST(request: NextRequest) {
 
     const stripe = getStripe()
 
-    // One-time credit purchase
+    // One-time credit purchase (uses dynamic pricing, no Stripe product needed)
     if (type === 'credits') {
       const creditAmount = credits as number
       const priceCents = CREDIT_PRICES[creditAmount]
@@ -61,9 +65,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ checkoutUrl: session.url })
     }
 
-    // Subscription purchase
-    if (type === 'subscription' && priceId) {
-      // Get user's email
+    // Subscription purchase (uses Price ID from env)
+    if (type === 'subscription') {
+      if (!PRO_PRICE_ID || PRO_PRICE_ID.includes('YOUR_')) {
+        return NextResponse.json(
+          { error: 'Stripe Pro plan not configured. Set STRIPE_PRO_PRICE_ID in env vars.' },
+          { status: 500 }
+        )
+      }
+
       const { data: userProfile } = await supabase
         .from('users')
         .select('email')
@@ -79,7 +89,7 @@ export async function POST(request: NextRequest) {
         payment_method_types: ['card'],
         mode: 'subscription',
         customer: customer.id,
-        line_items: [{ price: priceId, quantity: 1 }],
+        line_items: [{ price: PRO_PRICE_ID, quantity: 1 }],
         success_url: `${NEXT_URL}/dashboard/credits?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${NEXT_URL}/dashboard/credits`,
         metadata: {

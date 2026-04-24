@@ -23,44 +23,63 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 })
   }
 
-  // Handle checkout.session.completed for one-time credit purchases
+  // One-time credit purchases
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as any
-
     const purchaseType = session.metadata?.type
     const userId = session.metadata?.userId
 
     if (purchaseType === 'credits' && userId) {
       const creditsAmount = parseInt(session.metadata?.credits || '0', 10)
-
       if (creditsAmount > 0) {
         await addCredits(
           userId,
           creditsAmount,
-          `Purchased ${creditsAmount.toLocaleString()} credits via Stripe`,
+          `Purchased ${creditsAmount.toLocaleString()} credits`,
           session.id,
           'purchase'
         )
-        console.log(`[Stripe Webhook] Added ${creditsAmount} credits to user ${userId}`)
+        console.log(`[Webhook] Added ${creditsAmount} credits to ${userId}`)
       }
+    }
+
+    // Subscription completed
+    if (purchaseType === 'subscription' && userId) {
+      await addCredits(
+        userId,
+        500, // Pro plan = 500 credits/month
+        'Pro subscription — 500 credits/month',
+        session.id,
+        'bonus'
+      )
+      console.log(`[Webhook] Pro subscription activated for ${userId}`)
     }
   }
 
-  // Handle subscription events
+  // Subscription renewal — add credits each billing cycle
   if (event.type === 'invoice.payment_succeeded') {
     const invoice = event.data.object as any
-    const customerId = invoice.customer
-    const userId = invoice.metadata?.userId || invoice.subscription_details?.metadata?.userId
+    const subscriptionId = invoice.subscription
 
-    if (userId) {
-      // Add monthly credits for subscription
-      await addCredits(
-        userId,
-        200, // 200 credits per month for subscription
-        'Monthly subscription credits',
-        invoice.id,
-        'bonus'
-      )
+    // Get subscription to find the customer and metadata
+    if (subscriptionId) {
+      const stripe = getStripe()
+      try {
+        const subscription = await stripe.subscriptions.retrieve(subscriptionId)
+        const userId = subscription.metadata?.userId
+        if (userId) {
+          await addCredits(
+            userId,
+            500,
+            'Monthly subscription renewal — 500 credits',
+            invoice.id,
+            'bonus'
+          )
+          console.log(`[Webhook] Renewal credits for ${userId}`)
+        }
+      } catch (e) {
+        console.error('Failed to retrieve subscription:', e)
+      }
     }
   }
 

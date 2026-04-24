@@ -3,41 +3,70 @@
 import { useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Check, Sparkles, Zap, Crown, ArrowRight } from "lucide-react"
+import { Check, Sparkles, Zap, Crown, ArrowRight, Mail } from "lucide-react"
 import { cn } from "@/lib/utils"
 
 const plans = [
   {
-    name: "Creator",
-    price: "$19",
-    period: "/month",
-    credits: 500,
-    gradient: "from-blue-500 to-cyan-500",
+    name: "Free",
+    price: "$0",
+    period: "",
+    credits: 50,
+    gradient: "from-slate-500 to-gray-500",
     icon: Sparkles,
-    features: ["500 credits/month", "AI image generation", "AI video generation", "AI music generation", "AI copywriting", "Content library (1,000 items)", "3 brand profiles", "Schedule to 3 platforms", "Basic analytics"],
-    priceId: "price_creator_monthly",
+    features: [
+      "50 credits on signup",
+      "AI image generation",
+      "AI copywriting",
+      "Content library (100 items)",
+      "1 brand profile",
+      "Basic analytics",
+      "Watermarked exports",
+    ],
+    priceId: null,
     popular: false,
   },
   {
-    name: "Agency",
-    price: "$49",
+    name: "Pro",
+    price: "$4.99",
     period: "/month",
-    credits: 2000,
+    credits: 500,
     gradient: "from-violet-500 to-purple-500",
     icon: Zap,
-    features: ["2,000 credits/month", "Everything in Creator", "Unlimited content library", "10 brand profiles", "Schedule to all platforms", "Team collaboration (5 members)", "Advanced analytics", "Repurpose engine", "Priority support"],
-    priceId: "price_agency_monthly",
+    features: [
+      "500 credits/month",
+      "Everything in Free",
+      "AI video generation",
+      "AI music generation",
+      "Unlimited content library",
+      "5 brand profiles",
+      "Schedule to all platforms",
+      "Repurpose engine",
+      "No watermarks",
+      "Priority support",
+    ],
+    priceId: "price_pro_monthly",
     popular: true,
   },
   {
-    name: "Enterprise",
-    price: "$99",
-    period: "/month",
-    credits: 10000,
+    name: "Business",
+    price: "Custom",
+    period: "",
+    credits: "Unlimited",
     gradient: "from-amber-500 to-orange-500",
     icon: Crown,
-    features: ["10,000 credits/month", "Everything in Agency", "Unlimited brand profiles", "Unlimited team members", "White-label options", "API access", "Custom AI model fine-tuning", "Dedicated support", "SLA guarantee"],
-    priceId: "price_enterprise_monthly",
+    features: [
+      "Unlimited credits",
+      "Everything in Pro",
+      "Unlimited brand profiles",
+      "Unlimited team members",
+      "White-label options",
+      "API access",
+      "Custom AI fine-tuning",
+      "Dedicated support",
+      "SLA guarantee",
+    ],
+    priceId: null,
     popular: false,
   },
 ]
@@ -45,16 +74,24 @@ const plans = [
 export default function PricingPage() {
   const [loading, setLoading] = useState<string | null>(null)
 
-  const handleSubscribe = async (priceId: string) => {
+  const handleSubscribe = async (priceId: string | null, planName: string) => {
+    if (!priceId) {
+      // Free or Business plan
+      if (planName === "Business") {
+        window.location.href = "mailto:hello@thearmansheikh.co?subject=CreateFlow%20Business%20Plan%20Inquiry"
+      }
+      return
+    }
+
     setLoading(priceId)
     try {
       const res = await fetch("/api/stripe/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ priceId }),
+        body: JSON.stringify({ type: "subscription", priceId }),
       })
       const data = await res.json()
-      if (data.url) window.location.href = data.url
+      if (data.checkoutUrl) window.location.href = data.checkoutUrl
     } catch (e) {
       console.error("Checkout failed", e)
     } finally {
@@ -67,7 +104,7 @@ export default function PricingPage() {
       <div className="text-center">
         <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Choose your plan</h1>
         <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">
-          Start free with 50 credits. Upgrade when you need more.
+          Start free with 50 credits. Upgrade to Pro for $4.99/mo when you need more.
         </p>
       </div>
 
@@ -82,10 +119,14 @@ export default function PricingPage() {
                 <plan.icon className="h-5 w-5" />
               </div>
               <CardTitle>{plan.name}</CardTitle>
-              <CardDescription>{plan.credits.toLocaleString()} credits / month</CardDescription>
+              <CardDescription>
+                {typeof plan.credits === "number"
+                  ? `${plan.credits.toLocaleString()} credits / month`
+                  : `${plan.credits} credits`}
+              </CardDescription>
               <div className="mt-1">
                 <span className="text-3xl font-bold">{plan.price}</span>
-                <span className="text-sm text-muted-foreground">{plan.period}</span>
+                {plan.period && <span className="text-sm text-muted-foreground">{plan.period}</span>}
               </div>
             </CardHeader>
             <CardContent className="flex-1">
@@ -99,8 +140,24 @@ export default function PricingPage() {
               </ul>
             </CardContent>
             <div className="p-6 pt-0">
-              <Button className="w-full" variant={plan.popular ? "default" : "outline"} onClick={() => handleSubscribe(plan.priceId)} disabled={loading === plan.priceId}>
-                {loading === plan.priceId ? "Redirecting..." : plan.name === "Enterprise" ? "Contact Sales" : "Get Started"}
+              <Button
+                className="w-full"
+                variant={plan.popular ? "default" : "outline"}
+                onClick={() => handleSubscribe(plan.priceId, plan.name)}
+                disabled={loading === plan.priceId}
+              >
+                {loading === plan.priceId ? (
+                  "Redirecting..."
+                ) : plan.name === "Business" ? (
+                  <>
+                    <Mail className="mr-2 h-4 w-4" />
+                    Contact Sales
+                  </>
+                ) : plan.priceId ? (
+                  "Get Started"
+                ) : (
+                  "Start Free"
+                )}
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
