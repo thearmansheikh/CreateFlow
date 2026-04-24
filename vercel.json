@@ -3,6 +3,5 @@
   "devCommand": "next dev",
   "installCommand": "npm install",
   "framework": "nextjs",
-  "outputDirectory": ".next",
-  "domains": ["createflow-md.vercel.app"]
+  "outputDirectory": ".next"
 }
