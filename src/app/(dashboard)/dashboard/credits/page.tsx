@@ -42,7 +42,7 @@ export default function CreditsPage() {
       .from("workspace_members")
       .select("workspace_id")
       .eq("user_id", user.id)
-      .single()
+      .single() as any
 
     if (member) setWorkspaceId(member.workspace_id)
 
