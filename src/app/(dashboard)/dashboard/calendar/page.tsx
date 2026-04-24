@@ -133,7 +133,6 @@ export default function CalendarPage() {
       platforms: selectedPlatforms,
       scheduled_at: scheduledAt,
       status: "scheduled",
-      workspace_id: member?.workspace_id,
     })
 
     if (!error) {
