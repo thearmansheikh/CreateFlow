@@ -132,9 +132,8 @@ export default function BrandsPage() {
 
     if (brandData.id) {
       // Update existing
-      const { error } = await supabase
-        .from("brand_profiles")
-        .update(payload as any)
+      const { error } = await (supabase.from("brand_profiles") as any)
+        .update(payload)
         .eq("id", brandData.id)
 
       if (!error) {
