@@ -4,7 +4,6 @@ import dynamic from "next/dynamic"
 import Navbar from "@/components/landing/navbar"
 import HeroSection from "@/components/landing/hero-section"
 import FeaturesSection from "@/components/landing/features-section"
-import HowItWorksSection from "@/components/landing/how-it-works"
 import AboutSection from "@/components/landing/about-section"
 import SocialProofSection from "@/components/landing/social-proof"
 import PricingSection from "@/components/landing/pricing-section"
@@ -24,7 +23,6 @@ export default function LandingPage() {
       <main id="main-content" role="main">
         <HeroSection />
         <FeaturesSection />
-        <HowItWorksSection />
         <AboutSection />
         <SocialProofSection />
         <PricingSection />
