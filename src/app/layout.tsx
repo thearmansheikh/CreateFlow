@@ -52,7 +52,7 @@ export const metadata: Metadata = {
     locale: "en_GB",
     images: [
       {
-        url: "/og-image.png",
+        url: "/api/og",
         width: 1200,
         height: 630,
         alt: "CreateFlow — AI-powered creative platform",
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "CreateFlow — Create Everything. Publish Everywhere.",
     description: "The AI-powered platform for creators — generate images, video, music & copy, then publish to all platforms in one click.",
-    images: ["/og-image.png"],
+    images: ["/api/og"],
   },
 }
 
