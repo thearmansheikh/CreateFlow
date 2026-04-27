@@ -2,85 +2,68 @@ import Link from "next/link"
 
 export default function PrivacyPage() {
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-foreground">
-      <div className="max-w-3xl mx-auto px-6 py-24">
-        <Link href="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors mb-12 inline-block">
-          ← Back to CreateFlow
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 px-4 py-16">
+      <div className="max-w-3xl mx-auto">
+        <Link
+          href="/"
+          className="text-purple-400 hover:text-purple-300 mb-8 inline-block"
+        >
+          ← Back to home
         </Link>
 
-        <h1 className="text-4xl font-bold tracking-tight mb-2">Privacy Policy</h1>
-        <p className="text-muted-foreground mb-12">Last updated: {new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</p>
+        <h1 className="text-4xl font-bold text-white mb-2">Privacy Policy</h1>
+        <p className="text-slate-500 mb-8">Last updated: 24 April 2025</p>
 
-        <div className="prose prose-invert max-w-none space-y-8">
-          <section>
-            <h2 className="text-xl font-semibold mb-3">1. Introduction</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              CreateFlow ("we," "our," or "us") operates the AI-powered content creation platform. This Privacy Policy explains how we collect, use, and share information when you use our services at createflow-md.vercel.app.
-            </p>
-          </section>
+        <div className="prose prose-invert max-w-none space-y-6 text-slate-300">
+          <p>
+            CreateFlow ("we", "our", or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your personal information when you use our platform.
+          </p>
 
           <section>
-            <h2 className="text-xl font-semibold mb-3">2. Information We Collect</h2>
-            <p className="text-muted-foreground leading-relaxed mb-3">We collect the following types of information:</p>
-            <ul className="text-muted-foreground space-y-2 list-disc list-inside">
-              <li><strong>Account Information:</strong> Name, email address, and profile data when you sign up.</li>
-              <li><strong>Usage Data:</strong> Content you generate (images, videos, music, copy), prompts you submit, and how you interact with the platform.</li>
-              <li><strong>Payment Information:</strong> Processed through Stripe. We do not store card numbers on our servers.</li>
-              <li><strong>Technical Data:</strong> IP address, browser type, device information, and cookies for authentication and analytics.</li>
+            <h2 className="text-xl font-semibold text-white mb-3">Information We Collect</h2>
+            <h3 className="text-lg font-medium text-white mt-4 mb-2">Information You Provide</h3>
+            <ul className="list-disc list-inside space-y-1 ml-2">
+              <li>Account information (name, email address) when you register</li>
+              <li>Content you create, upload, or store on the platform</li>
+              <li>Payment information (processed securely through Stripe)</li>
+            </ul>
+            <h3 className="text-lg font-medium text-white mt-4 mb-2">Information Collected Automatically</h3>
+            <ul className="list-disc list-inside space-y-1 ml-2">
+              <li>Usage data (pages visited, features used, time spent)</li>
+              <li>Device and browser information</li>
+              <li>IP address and approximate location</li>
             </ul>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold mb-3">3. How We Use Your Information</h2>
-            <ul className="text-muted-foreground space-y-2 list-disc list-inside">
-              <li>Provide and maintain the CreateFlow service</li>
+            <h2 className="text-xl font-semibold text-white mb-3">How We Use Your Information</h2>
+            <ul className="list-disc list-inside space-y-1 ml-2">
+              <li>Provide and maintain our services</li>
               <li>Process payments and manage your subscription</li>
-              <li>Improve our AI generation models and user experience</li>
-              <li>Send service-related communications (updates, security alerts)</li>
-              <li>Enforce our Terms of Service and prevent abuse</li>
+              <li>Improve and personalise your experience</li>
+              <li>Send service-related communications</li>
+              <li>Ensure platform security and prevent fraud</li>
             </ul>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold mb-3">4. Data Sharing</h2>
-            <p className="text-muted-foreground leading-relaxed mb-3">We do not sell your personal information. We share data only with:</p>
-            <ul className="text-muted-foreground space-y-2 list-disc list-inside">
-              <li><strong>AI Providers:</strong> Replicate, FAL.ai, MiniMax, and Anthropic process your prompts and content to generate outputs. They are bound by their own privacy policies.</li>
-              <li><strong>Stripe:</strong> Processes payments securely.</li>
-              <li><strong>Supabase:</strong> Hosts our database and user authentication.</li>
-            </ul>
+            <h2 className="text-xl font-semibold text-white mb-3">Data Storage</h2>
+            <p>Your data is stored on Supabase (PostgreSQL) servers. We do not sell your personal data to third parties.</p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold mb-3">5. Your Rights</h2>
-            <ul className="text-muted-foreground space-y-2 list-disc list-inside">
-              <li>Access, correct, or delete your personal data</li>
-              <li>Export your data in a machine-readable format</li>
-              <li>Opt out of marketing communications</li>
-              <li>Close your account at any time</li>
-            </ul>
-            <p className="text-muted-foreground mt-3 leading-relaxed">To exercise any of these rights, contact us at <a href="mailto:hello@thearmansheikh.co" className="text-purple-400 hover:underline">hello@thearmansheikh.co</a>.</p>
+            <h2 className="text-xl font-semibold text-white mb-3">Cookies</h2>
+            <p>We use essential cookies for authentication and session management. You can control cookie preferences through your browser settings.</p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold mb-3">6. Data Retention</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              We retain your data as long as your account is active. If you delete your account, your personal data will be removed within 30 days, except where we are legally required to retain it.
-            </p>
+            <h2 className="text-xl font-semibold text-white mb-3">Your Rights</h2>
+            <p>You have the right to access your personal data, request correction or deletion, export your data, and withdraw consent at any time.</p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold mb-3">7. Security</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              We use industry-standard security measures including HTTPS encryption, secure database access via Supabase, and serverless architecture to protect your data. However, no system is 100% secure.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-semibold mb-3">8. Contact</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              For questions about this Privacy Policy, contact us at <a href="mailto:hello@thearmansheikh.co" className="text-purple-400 hover:underline">hello@thearmansheikh.co</a>.
-            </p>
+            <h2 className="text-xl font-semibold text-white mb-3">Contact</h2>
+            <p>For privacy-related inquiries, contact us at: <span className="text-purple-400">privacy@thearmansheikh.co</span></p>
           </section>
         </div>
       </div>

@@ -234,3 +234,6 @@ The application utilizes Lucide-react as the primary icon library for UI element
 
 #### 2026-04-18
 The project uses React with the 'use client' directive for interactive components like the Library page.
+
+#### 2026-04-26
+Discovery: Code itself looks correct — the issue is entirely in the configuration between Supabase and Google OAuth.

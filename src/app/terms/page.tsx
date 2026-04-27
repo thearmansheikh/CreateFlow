@@ -2,97 +2,71 @@ import Link from "next/link"
 
 export default function TermsPage() {
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-foreground">
-      <div className="max-w-3xl mx-auto px-6 py-24">
-        <Link href="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors mb-12 inline-block">
-          ← Back to CreateFlow
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 px-4 py-16">
+      <div className="max-w-3xl mx-auto">
+        <Link
+          href="/"
+          className="text-purple-400 hover:text-purple-300 mb-8 inline-block"
+        >
+          ← Back to home
         </Link>
 
-        <h1 className="text-4xl font-bold tracking-tight mb-2">Terms of Service</h1>
-        <p className="text-muted-foreground mb-12">Last updated: {new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</p>
+        <h1 className="text-4xl font-bold text-white mb-2">Terms of Service</h1>
+        <p className="text-slate-500 mb-8">Last updated: 24 April 2025</p>
 
-        <div className="prose prose-invert max-w-none space-y-8">
+        <div className="prose prose-invert max-w-none space-y-6 text-slate-300">
+          <p>
+            By using CreateFlow, you agree to these Terms of Service. Please read them carefully.
+          </p>
+
           <section>
-            <h2 className="text-xl font-semibold mb-3">1. Acceptance of Terms</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              By accessing or using CreateFlow (the "Service"), you agree to be bound by these Terms of Service. If you do not agree, do not use the Service.
-            </p>
+            <h2 className="text-xl font-semibold text-white mb-3">Account</h2>
+            <p>You must create an account to use our services. You are responsible for maintaining the security of your account and for all activities that occur under it.</p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold mb-3">2. Description of Service</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              CreateFlow is an AI-powered platform that enables users to generate images, videos, music, and written content, and to manage, schedule, and publish that content across various platforms.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-semibold mb-3">3. Accounts</h2>
-            <ul className="text-muted-foreground space-y-2 list-disc list-inside">
-              <li>You must be at least 18 years old to create an account.</li>
-              <li>You are responsible for maintaining the confidentiality of your account credentials.</li>
-              <li>You are responsible for all activities that occur under your account.</li>
-              <li>You may cancel your account at any time by contacting us.</li>
+            <h2 className="text-xl font-semibold text-white mb-3">Acceptable Use</h2>
+            <p>You may not:</p>
+            <ul className="list-disc list-inside space-y-1 ml-2">
+              <li>Use the platform for any illegal purpose</li>
+              <li>Upload or generate content that violates intellectual property rights</li>
+              <li>Attempt to gain unauthorised access to our systems</li>
+              <li>Use the service to generate harmful, abusive, or malicious content</li>
             </ul>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold mb-3">4. Acceptable Use</h2>
-            <p className="text-muted-foreground leading-relaxed mb-3">You may NOT use the Service to generate or distribute content that:</p>
-            <ul className="text-muted-foreground space-y-2 list-disc list-inside">
-              <li>Is illegal, defamatory, or violates someone's privacy or intellectual property rights</li>
-              <li>Contains hate speech, harassment, or discrimination</li>
-              <li>Is designed to deceive or defraud</li>
-              <li>Violates applicable laws or regulations</li>
+            <h2 className="text-xl font-semibold text-white mb-3">Content</h2>
+            <p>You retain ownership of content you create. By using our AI generation features, you grant us a licence to process and store your content as necessary to provide our services.</p>
+          </section>
+
+          <section>
+            <h2 className="text-xl font-semibold text-white mb-3">Payment &amp; Credits</h2>
+            <ul className="list-disc list-inside space-y-1 ml-2">
+              <li>Credits are non-refundable and do not expire unless otherwise stated</li>
+              <li>Subscription fees are billed in advance on a monthly or annual basis</li>
+              <li>We reserve the right to modify pricing with 30 days' notice</li>
             </ul>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold mb-3">5. AI-Generated Content</h2>
-            <ul className="text-muted-foreground space-y-2 list-disc list-inside">
-              <li>You retain ownership of content you create using the Service.</li>
-              <li>You are solely responsible for ensuring your generated content does not infringe on third-party rights.</li>
-              <li>AI-generated content may contain inaccuracies. Always review before publishing.</li>
-              <li>We reserve the right to monitor content for policy violations.</li>
-            </ul>
+            <h2 className="text-xl font-semibold text-white mb-3">Limitation of Liability</h2>
+            <p>CreateFlow is provided "as is" without warranties of any kind. We are not liable for any indirect, incidental, or consequential damages arising from your use of the platform.</p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold mb-3">6. Credits &amp; Payments</h2>
-            <ul className="text-muted-foreground space-y-2 list-disc list-inside">
-              <li>Credits are consumed when you use AI generation features.</li>
-              <li>Unused credits do not roll over between billing cycles for subscriptions.</li>
-              <li>One-time credit purchases are non-refundable.</li>
-              <li>Subscription cancellations take effect at the end of the current billing period.</li>
-            </ul>
+            <h2 className="text-xl font-semibold text-white mb-3">Termination</h2>
+            <p>We may suspend or terminate your account if you violate these terms. You may delete your account at any time through your account settings.</p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold mb-3">7. Service Availability</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              We strive to maintain high availability but do not guarantee uninterrupted access. We may modify, suspend, or discontinue any part of the Service at any time with reasonable notice.
-            </p>
+            <h2 className="text-xl font-semibold text-white mb-3">Changes</h2>
+            <p>We may update these terms from time to time. Continued use of the platform after changes constitutes acceptance of the new terms.</p>
           </section>
 
           <section>
-            <h2 className="text-xl font-semibold mb-3">8. Limitation of Liability</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              To the maximum extent permitted by law, CreateFlow and its operators shall not be liable for any indirect, incidental, special, or consequential damages arising from your use of the Service.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-semibold mb-3">9. Changes to Terms</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              We may update these Terms from time to time. Continued use of the Service after changes constitutes acceptance of the new Terms.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-xl font-semibold mb-3">10. Contact</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              For questions about these Terms, contact us at <a href="mailto:hello@thearmansheikh.co" className="text-purple-400 hover:underline">hello@thearmansheikh.co</a>.
-            </p>
+            <h2 className="text-xl font-semibold text-white mb-3">Contact</h2>
+            <p>For questions about these terms, contact us at: <span className="text-purple-400">legal@thearmansheikh.co</span></p>
           </section>
         </div>
       </div>
