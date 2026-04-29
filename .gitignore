@@ -15,3 +15,5 @@ next-env.d.ts
 
 # Decisions (optional — remove if you want to commit)
 # Decisions/
+
+.vercel
