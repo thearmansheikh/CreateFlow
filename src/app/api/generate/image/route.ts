@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json()
     console.log("Request body:", JSON.stringify(body, null, 2))
 
-    const { prompt, aspectRatio, style, numOutputs = 1, workspaceId } = body
+    const { prompt, aspectRatio, style, numOutputs = 1, workspaceId, brandContext } = body
 
     if (!prompt) {
       return NextResponse.json({ error: "Prompt is required" }, { status: 400 })
@@ -37,9 +37,11 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Build prompt
+    // Build prompt with optional brand context
     let enhancedPrompt = prompt
-    if (style) {
+    if (brandContext) {
+        enhancedPrompt = `${prompt}. ${brandContext}`
+      } else if (style) {
       enhancedPrompt = `${prompt}, ${style} style`
     }
 

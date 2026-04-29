@@ -9,7 +9,7 @@ const MODEL = 'music-2.6-free'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { prompt, lyrics, instrumental = false } = body
+    const { prompt, lyrics, instrumental = false, brandContext } = body
 
     if (!prompt && !lyrics) {
       return NextResponse.json({ error: 'Prompt or lyrics are required' }, { status: 400 })
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
       },
       body: JSON.stringify({
         model: MODEL,
-        prompt: prompt || undefined,
+        prompt: brandContext ? (prompt ? prompt + '. ' + brandContext : brandContext) : (prompt || undefined),
         lyrics: lyrics || undefined,
         is_instrumental: instrumental,
         output_format: 'hex',

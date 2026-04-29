@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
+import { BrandSelector } from "@/components/brand-selector"
 import {
   Image as ImageIcon,
   Sparkles,
@@ -17,6 +18,26 @@ import {
   Layers,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+
+interface BrandContext {
+  id: string
+  name: string
+  description: string | null
+  voice_tone: { tone?: string; personality?: string } | null
+  visual_style: { mood?: string; complexity?: string } | null
+  brand_colors: string[] | null
+  typography: { primary_font?: string; secondary_font?: string } | null
+  logo_url: string | null
+}
+
+function buildBrandContext(brand: BrandContext | null): string | undefined {
+  if (!brand) return undefined
+  const parts: string[] = []
+  if (brand.description) parts.push(brand.description)
+  if (brand.visual_style?.mood) parts.push(`Visual mood: ${brand.visual_style.mood}`)
+  if (brand.brand_colors?.length) parts.push(`Colors: ${brand.brand_colors.join(", ")}`)
+  return parts.join(". ")
+}
 
 const aspectRatios = [
   { label: "1:1", value: "1:1", w: 1024, h: 1024, icon: "⬜" },
@@ -46,6 +67,8 @@ export default function ImageGeneratorPage() {
   const [isGenerating, setIsGenerating] = useState(false)
   const [generatedImages, setGeneratedImages] = useState<string[]>([])
   const [error, setError] = useState<string | null>(null)
+  const [selectedBrandId, setSelectedBrandId] = useState<string | null>(null)
+  const [selectedBrand, setSelectedBrand] = useState<BrandContext | null>(null)
 
   const handleGenerate = async () => {
     if (!prompt.trim()) return
@@ -62,6 +85,7 @@ export default function ImageGeneratorPage() {
           aspectRatio,
           style,
           numOutputs: numImages,
+            brandContext: buildBrandContext(selectedBrand),
         }),
       })
 
@@ -84,7 +108,7 @@ export default function ImageGeneratorPage() {
     <div className="flex-1 overflow-auto">
       <div className="flex h-full flex-col lg:flex-row">
         {/* Left Panel — Controls */}
-        <div className="w-full space-y-6 border-r border-border/50 p-6 lg:w-96 lg:overflow-auto">
+        <div className="w-full space-y-4 sm:space-y-6 border-b lg:border-b-0 lg:border-r border-border/50 p-4 sm:p-6 lg:w-96 lg:overflow-auto">
           <div>
             <h1 className="text-xl font-bold">Image Generator</h1>
             <p className="text-sm text-muted-foreground">Create AI images from text prompts</p>
@@ -100,6 +124,13 @@ export default function ImageGeneratorPage() {
               className="min-h-[120px] w-full rounded-md border border-input bg-transparent p-3 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring resize-y"
             />
           </div>
+
+          {/* Brand Selector */}
+          <BrandSelector
+            selectedBrand={selectedBrand}
+            onChange={setSelectedBrand}
+            label="Brand Style"
+          />
 
           {/* Negative prompt */}
           <div className="space-y-2">

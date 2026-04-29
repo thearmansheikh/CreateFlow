@@ -17,6 +17,7 @@ import {
   X,
   ChevronDown,
   CreditCard,
+  RefreshCw,
 } from "lucide-react"
 
 interface SidebarProps {
@@ -31,6 +32,7 @@ const navItems = [
   { label: "Calendar", href: "/dashboard/calendar", icon: CalendarDays },
   { label: "Analytics", href: "/dashboard/analytics", icon: BarChart3 },
   { label: "Brands", href: "/dashboard/brands", icon: Palette },
+  { label: "Repurpose", href: "/dashboard/repurpose", icon: RefreshCw },
   { label: "Credits", href: "/dashboard/credits", icon: CreditCard },
   { label: "Settings", href: "/dashboard/settings", icon: Settings },
 ]

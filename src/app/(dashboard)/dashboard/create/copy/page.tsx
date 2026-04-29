@@ -19,6 +19,18 @@ import {
   PenTool,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { BrandSelector } from "@/components/brand-selector"
+
+interface BrandProfile {
+  id: string
+  name: string
+  description: string | null
+  voice_tone: { tone?: string; personality?: string; language?: string } | null
+  visual_style: { mood?: string; complexity?: string } | null
+  brand_colors: string[] | null
+  typography: { primary_font?: string; secondary_font?: string } | null
+  logo_url: string | null
+}
 
 const contentTypes = [
   { label: "Caption", value: "caption", icon: MessageSquare, desc: "Social media captions" },
@@ -78,6 +90,7 @@ export default function CopyGeneratorPage() {
   const [contentType, setContentType] = useState("caption")
   const [tone, setTone] = useState("professional")
   const [brandContext, setBrandContext] = useState("")
+  const [selectedBrand, setSelectedBrand] = useState<BrandProfile | null>(null)
   const [maxLength, setMaxLength] = useState(500)
   const [isGenerating, setIsGenerating] = useState(false)
   const [result, setResult] = useState<string | null>(null)
@@ -137,7 +150,7 @@ export default function CopyGeneratorPage() {
     <div className="flex-1 overflow-auto">
       <div className="flex h-full flex-col lg:flex-row">
         {/* Left Panel — Controls */}
-        <div className="w-full space-y-6 border-r border-border/50 p-6 lg:w-96 lg:overflow-auto">
+        <div className="w-full space-y-4 sm:space-y-6 border-b lg:border-b-0 lg:border-r border-border/50 p-4 sm:p-6 lg:w-96 lg:overflow-auto">
           <div>
             <h1 className="text-xl font-bold">Copy Generator</h1>
             <p className="text-sm text-muted-foreground">Write marketing copy and content with AI</p>
@@ -216,16 +229,22 @@ export default function CopyGeneratorPage() {
             />
           </div>
 
-          {/* Brand Context */}
-          <div className="space-y-2">
-            <Label>Brand Voice Context (optional)</Label>
-            <textarea
-              value={brandContext}
-              onChange={(e) => setBrandContext(e.target.value)}
-              placeholder="Our brand is youthful, bold, and sustainability-focused. We speak directly to Gen Z..."
-              className="min-h-[80px] w-full rounded-md border border-input bg-transparent p-3 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring resize-y"
-            />
-          </div>
+          {/* Brand Selector */}
+          <BrandSelector
+            selectedBrand={selectedBrand}
+            onChange={(brand) => {
+              setSelectedBrand(brand)
+              if (brand) {
+                const parts: string[] = []
+                if (brand.voice_tone?.tone) parts.push(`Tone: ${brand.voice_tone.tone}`)
+                if (brand.voice_tone?.personality) parts.push(`Personality: ${brand.voice_tone.personality}`)
+                if (brand.description) parts.push(brand.description)
+                setBrandContext(parts.join(". "))
+              } else {
+                setBrandContext("")
+              }
+            }}
+          />
 
           {/* Max Length */}
           <div className="space-y-2">

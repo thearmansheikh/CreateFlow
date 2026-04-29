@@ -56,11 +56,7 @@ async function getFileUrl(fileId: string): Promise<string> {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { prompt, duration = 6, resolution = '768P' } = body
-
-    // Normalize resolution
-    const normalizedResolution = resolution === '1080p' ? '1080P' : '768P'
-    const normalizedDuration = duration === 10 ? 10 : 6
+    const { prompt, duration = 6, resolution = '768P', brandContext } = body
 
     if (!prompt) {
       return NextResponse.json({ error: 'Prompt is required' }, { status: 400 })
@@ -69,6 +65,13 @@ export async function POST(request: NextRequest) {
     if (!API_KEY) {
       return NextResponse.json({ error: 'MINIMAX_API_KEY not configured' }, { status: 500 })
     }
+
+    // Normalize resolution — UI sends '720p' or '1080p', MiniMax wants '768P' or '1080P'
+    const normalizedResolution = resolution.toUpperCase().includes('1080') ? '1080P' : '768P'
+    const normalizedDuration = duration === 10 ? 10 : 6
+
+    // Build prompt with optional brand context
+    const enhancedPrompt = brandContext ? `${prompt}. ${brandContext}` : prompt
 
     // Auth check
     const supabase = await createClient()
@@ -83,7 +86,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: creditResult.error, balance: creditResult.balanceAfter }, { status: 402 })
     }
 
-    const { task_id, base_resp } = await createVideoTask(prompt, normalizedDuration, normalizedResolution)
+    const { task_id, base_resp } = await createVideoTask(enhancedPrompt, normalizedDuration, normalizedResolution)
 
     if (base_resp?.status_code !== 0) {
       return NextResponse.json({ error: base_resp.status_msg || 'Failed to create video task' }, { status: 500 })
@@ -106,7 +109,6 @@ export async function POST(request: NextRequest) {
     )
   }
 }
-
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)

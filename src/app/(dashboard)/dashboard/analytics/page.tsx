@@ -191,8 +191,8 @@ export default async function AnalyticsPage(props: { params: Params; searchParam
     .map(([date, count]) => ({ date, count }))
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-3xl font-bold">Analytics</h1>
           <p className="text-muted-foreground">Performance insights across your workspace</p>

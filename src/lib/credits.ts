@@ -54,7 +54,7 @@ export async function deductCredits(
     .from('workspace_members')
     .select('workspace_id')
     .eq('user_id', userId)
-    .single()
+    .single() as unknown as { data: { workspace_id: string } | null; error: Error | null }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { error: updateError } = await (supabase as any)
@@ -97,7 +97,7 @@ export async function addCredits(
     .from('workspace_members')
     .select('workspace_id')
     .eq('user_id', userId)
-    .single()
+    .single() as unknown as { data: { workspace_id: string } | null; error: Error | null }
 
   const { data: user, error: userError } = await supabase
     .from('users')

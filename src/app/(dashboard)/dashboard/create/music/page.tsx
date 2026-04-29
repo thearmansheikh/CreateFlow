@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
 import { cn } from "@/lib/utils"
+import { BrandSelector } from "@/components/brand-selector"
 import {
   Music,
   Sparkles,
@@ -36,6 +37,17 @@ const musicGenres = [
   { label: "Folk", value: "folk", desc: "Simple, organic" },
 ]
 
+interface BrandContext {
+  id: string
+  name: string
+  description: string | null
+  voice_tone: { tone?: string; personality?: string } | null
+  visual_style: { mood?: string; complexity?: string } | null
+  brand_colors: string[] | null
+  typography: { primary_font?: string; secondary_font?: string } | null
+  logo_url: string | null
+}
+
 const musicMoods = [
   "Happy & Uplifting",
   "Dark & Moody",
@@ -59,6 +71,7 @@ export default function MusicGeneratorPage() {
   const [duration, setDuration] = useState(0)
   const [currentTime, setCurrentTime] = useState(0)
   const [isPlaying, setIsPlaying] = useState(false)
+  const [selectedBrand, setSelectedBrand] = useState<BrandContext | null>(null)
   const audioRef = useRef<HTMLAudioElement | null>(null)
 
   // Cleanup audio on unmount
@@ -96,6 +109,7 @@ export default function MusicGeneratorPage() {
           prompt: enhancedPrompt,
           lyrics: lyrics.trim() || undefined,
           instrumental,
+          brandContext: selectedBrand ? `${selectedBrand.name}: ${selectedBrand.description || ""}` : undefined,
         }),
       })
 
@@ -159,11 +173,14 @@ export default function MusicGeneratorPage() {
     <div className="flex-1 overflow-auto">
       <div className="flex h-full flex-col lg:flex-row">
         {/* Left Panel — Controls */}
-        <div className="w-full space-y-6 border-r border-border/50 p-6 lg:w-96 lg:overflow-auto">
+        <div className="w-full space-y-4 sm:space-y-6 border-b lg:border-b-0 lg:border-r border-border/50 p-4 sm:p-6 lg:w-96 lg:overflow-auto">
           <div>
             <h1 className="text-xl font-bold">Music Generator</h1>
             <p className="text-sm text-muted-foreground">Create original music with MiniMax AI</p>
           </div>
+
+          {/* Brand Selector */}
+          <BrandSelector selectedBrand={selectedBrand} onChange={setSelectedBrand} label="Brand Voice" />
 
           {/* Genre */}
           <div className="space-y-2">

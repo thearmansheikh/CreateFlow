@@ -143,13 +143,13 @@ export default function CalendarPage() {
   }
 
   return (
-    <div className="flex-1 space-y-6 overflow-auto p-6 lg:p-8">
-      <div className="flex items-center justify-between">
+    <div className="flex-1 space-y-4 sm:space-y-6 overflow-auto p-4 sm:p-6 lg:p-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Content Calendar</h1>
           <p className="mt-1 text-sm text-muted-foreground">Schedule and manage your content across platforms.</p>
         </div>
-        <Button onClick={() => setShowNewPost(true)} className="gap-2">
+        <Button onClick={() => setShowNewPost(true)} className="gap-2 w-full sm:w-auto">
           <Plus className="h-4 w-4" />
           New Post
         </Button>
@@ -157,12 +157,12 @@ export default function CalendarPage() {
 
       {/* New Post Modal */}
       {showNewPost && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <Card className="w-full max-w-md">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50">
+          <Card className="w-full sm:max-w-md max-h-[90vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl m-0 sm:m-auto">
             <CardHeader>
               <CardTitle>Schedule New Post</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 pb-6">
               <div className="space-y-2">
                 <label className="text-sm font-medium">Caption</label>
                 <Input
@@ -200,7 +200,7 @@ export default function CalendarPage() {
                         }))
                       }
                       className={cn(
-                        "flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors",
+                        "flex items-center gap-1.5 rounded-lg border px-3 py-2 text-sm font-medium transition-colors",
                         newPost.platforms[platform]
                           ? PLATFORM_COLORS[platform]
                           : "border-border text-muted-foreground hover:border-primary/50"
@@ -223,26 +223,26 @@ export default function CalendarPage() {
       )}
 
       {/* Month Navigation */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="flex items-center gap-2">
           <Button variant="outline" size="icon" onClick={prevMonth}>
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <h2 className="text-lg font-semibold">
+          <h2 className="text-base sm:text-lg font-semibold">
             {MONTHS[month]} {year}
           </h2>
           <Button variant="outline" size="icon" onClick={nextMonth}>
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
-        <Badge variant="outline" className="gap-1.5">
+        <Badge variant="outline" className="gap-1.5 self-start sm:self-auto">
           <CalendarIcon className="h-3 w-3" />
           {posts.length} scheduled
         </Badge>
       </div>
 
-      {/* Calendar Grid */}
-      <Card>
+      {/* Calendar Grid — Desktop */}
+      <Card className="hidden sm:block">
         <CardContent className="p-0">
           {/* Day Headers */}
           <div className="grid grid-cols-7 border-b border-border">
@@ -316,6 +316,67 @@ export default function CalendarPage() {
               )
             })}
           </div>
+        </CardContent>
+      </Card>
+
+      {/* Calendar List — Mobile */}
+      <Card className="sm:hidden">
+        <CardContent className="p-4 space-y-4">
+          {Array.from({ length: daysInMonth }, (_, i) => i + 1)
+            .filter((day) => getPostsForDay(day).length > 0)
+            .map((day) => {
+              const dayPosts = getPostsForDay(day)
+              const isToday = isCurrentMonth && day === today.getDate()
+              return (
+                <div key={day} className="space-y-2">
+                  <div
+                    className={cn(
+                      "text-sm font-semibold",
+                      isToday && "text-primary"
+                    )}
+                  >
+                    {MONTHS[month].slice(0, 3)} {day}, {year}
+                  </div>
+                  {dayPosts.map((post) => {
+                    const StatusIcon = STATUS_CONFIG[post.status]?.icon || AlertCircle
+                    const statusColor = STATUS_CONFIG[post.status]?.color || "text-muted-foreground"
+                    const platforms = Object.keys(post.platforms || {}) as Platform[]
+                    return (
+                      <div key={post.id} className="flex items-start gap-3 rounded-lg border p-3">
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium truncate">{post.caption}</p>
+                          <div className="mt-1.5 flex items-center gap-2 flex-wrap">
+                            <div className="flex -space-x-1">
+                              {platforms.map((platform) => (
+                                <div
+                                  key={platform}
+                                  className={cn(
+                                    "flex h-5 w-5 items-center justify-center rounded-full border bg-background text-[8px] font-bold",
+                                    PLATFORM_COLORS[platform].split(" ")[1]
+                                  )}
+                                >
+                                  {PLATFORM_ABBREVS[platform]}
+                                </div>
+                              ))}
+                            </div>
+                            <span className="text-xs text-muted-foreground">
+                              {new Date(post.scheduled_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                            </span>
+                          </div>
+                        </div>
+                        <div className={cn("flex items-center gap-1 text-xs whitespace-nowrap", statusColor)}>
+                          <StatusIcon className="h-3 w-3" />
+                          {STATUS_CONFIG[post.status]?.label}
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              )
+            })}
+          {posts.length === 0 && (
+            <p className="text-center text-sm text-muted-foreground py-8">No posts scheduled this month.</p>
+          )}
         </CardContent>
       </Card>
 

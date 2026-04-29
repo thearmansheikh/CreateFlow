@@ -525,5 +525,66 @@ export interface Database {
     Enums: {
       [_ in never]: never
     }
+    workspace_members: {
+      Row: {
+        id: string
+        workspace_id: string
+        user_id: string
+        role: 'owner' | 'admin' | 'editor' | 'viewer'
+        created_at: string
+        updated_at: string
+      }
+      Insert: {
+        id?: string
+        workspace_id: string
+        user_id: string
+        role?: 'owner' | 'admin' | 'editor' | 'viewer'
+        created_at?: string
+        updated_at?: string
+      }
+      Update: {
+        id?: string
+        workspace_id?: string
+        user_id?: string
+        role?: 'owner' | 'admin' | 'editor' | 'viewer'
+        created_at?: string
+        updated_at?: string
+      }
+    }
+    invites: {
+      Row: {
+        id: string
+        workspace_id: string
+        email: string
+        role: 'admin' | 'editor' | 'viewer'
+        token: string
+        status: 'pending' | 'accepted' | 'expired'
+        invited_by: string
+        expires_at: string
+        created_at: string
+      }
+      Insert: {
+        id?: string
+        workspace_id: string
+        email: string
+        role?: 'admin' | 'editor' | 'viewer'
+        token?: string
+        status?: 'pending' | 'accepted' | 'expired'
+        invited_by: string
+        expires_at: string
+        created_at?: string
+      }
+      Update: {
+        id?: string
+        workspace_id?: string
+        email?: string
+        role?: 'admin' | 'editor' | 'viewer'
+        token?: string
+        status?: 'pending' | 'accepted' | 'expired'
+        invited_by?: string
+        expires_at?: string
+        created_at?: string
+      }
+    }
   }
 }

@@ -17,6 +17,18 @@ import {
   Film,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { BrandSelector } from "@/components/brand-selector"
+
+interface BrandContext {
+  id: string
+  name: string
+  description: string | null
+  voice_tone: { tone?: string; personality?: string } | null
+  visual_style: { mood?: string; complexity?: string } | null
+  brand_colors: string[] | null
+  typography: { primary_font?: string; secondary_font?: string } | null
+  logo_url: string | null
+}
 
 const durations = [
   { label: "6s", value: 6 },
@@ -60,6 +72,7 @@ export default function VideoGeneratorPage() {
   const [pollProgress, setPollProgress] = useState(0)
   const [elapsedSeconds, setElapsedSeconds] = useState(0)
   const [cancelMessage, setCancelMessage] = useState<string | null>(null)
+  const [selectedBrand, setSelectedBrand] = useState<BrandContext | null>(null)
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null)
   const elapsedRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
@@ -111,6 +124,7 @@ export default function VideoGeneratorPage() {
           negativePrompt: negativePrompt || undefined,
           duration,
           resolution,
+          brandContext: selectedBrand ? `${selectedBrand.name}: ${selectedBrand.description || ""}` : undefined,
         }),
       })
 
@@ -180,7 +194,7 @@ export default function VideoGeneratorPage() {
     <div className="flex-1 overflow-auto">
       <div className="flex h-full flex-col lg:flex-row">
         {/* Left Panel — Controls */}
-        <div className="w-full space-y-6 border-r border-border/50 p-6 lg:w-96 lg:overflow-auto">
+        <div className="w-full space-y-4 sm:space-y-6 border-b lg:border-b-0 lg:border-r border-border/50 p-4 sm:p-6 lg:w-96 lg:overflow-auto">
           <div>
             <h1 className="text-xl font-bold">Video Generator</h1>
             <p className="text-sm text-muted-foreground">Create AI video clips with MiniMax</p>
@@ -206,6 +220,13 @@ export default function VideoGeneratorPage() {
               placeholder="blurry, low quality, watermark, text..."
             />
           </div>
+          {/* Brand Selector */}
+          <BrandSelector
+            selectedBrand={selectedBrand}
+            onChange={setSelectedBrand}
+            label="Brand Style"
+          />
+
 
           {/* Style Presets */}
           <div className="space-y-2">
