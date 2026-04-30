@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useCallback } from "react"
+import { useEffect, useState, useCallback, useRef } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { Label } from "@/components/ui/label"
 
@@ -22,6 +22,7 @@ export function BrandSelector({ onBrandChange, className }: BrandSelectorProps) 
   const [brands, setBrands] = useState<BrandContext[]>([])
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  const initializedRef = useRef(false)
 
   useEffect(() => {
     const fetchBrands = async () => {

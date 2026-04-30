@@ -18,6 +18,7 @@ import {
   Type,
   Eye,
   Loader2,
+    Star,
   Upload,
   FileText,
   AlertCircle,
