@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { deductCredits, CREDIT_COSTS } from '@/lib/credits'
 import { saveGeneration } from '@/lib/save-generation'
+import { buildVoiceBrandContext, type FullBrandContext } from '@/lib/brand-context'
 
 const BASE_URL = 'https://api.minimax.io'
 const API_KEY = process.env.MINIMAX_API_KEY
@@ -10,7 +11,7 @@ const MODEL = 'music-2.6-free'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { prompt, lyrics, instrumental = false, brandContext, workspaceId } = body
+    const { prompt, lyrics, instrumental = false, brandContext, brandProfile, workspaceId } = body
 
     if (!prompt && !lyrics) {
       return NextResponse.json({ error: 'Prompt or lyrics are required' }, { status: 400 })
@@ -33,6 +34,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: creditResult.error, balance: creditResult.balanceAfter }, { status: 402 })
     }
 
+    // Build voice brand context from full profile or fall back to legacy string
+    const voiceContext = brandProfile
+      ? buildVoiceBrandContext(brandProfile as FullBrandContext)
+      : brandContext
+
     // Music generation is synchronous — returns hex-encoded audio
     const res = await fetch(`${BASE_URL}/v1/music_generation`, {
       method: 'POST',
@@ -42,7 +48,7 @@ export async function POST(request: NextRequest) {
       },
       body: JSON.stringify({
         model: MODEL,
-        prompt: brandContext ? (prompt ? prompt + '. ' + brandContext : brandContext) : (prompt || undefined),
+        prompt: voiceContext ? (prompt ? prompt + '. ' + voiceContext : voiceContext) : (prompt || undefined),
         lyrics: lyrics || undefined,
         is_instrumental: instrumental,
         output_format: 'hex',

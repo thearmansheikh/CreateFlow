@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
 import { deductCredits, CREDIT_COSTS } from "@/lib/credits"
 import { saveGeneration } from "@/lib/save-generation"
+import { buildVisualBrandContext, type FullBrandContext } from "@/lib/brand-context"
 
 const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
@@ -16,7 +17,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json()
     console.log("Request body:", JSON.stringify(body, null, 2))
 
-    const { prompt, aspectRatio, style, numOutputs = 1, workspaceId, brandContext } = body
+    const { prompt, aspectRatio, style, numOutputs = 1, workspaceId, brandContext, brandProfile } = body
 
     if (!prompt) {
       return NextResponse.json({ error: "Prompt is required" }, { status: 400 })
@@ -38,11 +39,19 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Build prompt with optional brand context
+    // Build rich visual brand context from full profile or fall back to legacy context string
+    const visualContext = brandProfile
+      ? buildVisualBrandContext(brandProfile as FullBrandContext)
+      : undefined
+
+    // Enhance prompt with full brand context (colors, mood, fonts, examples)
     let enhancedPrompt = prompt
-    if (brandContext) {
-        enhancedPrompt = `${prompt}. ${brandContext}`
-      } else if (style) {
+    if (visualContext) {
+      enhancedPrompt = `${prompt}. ${visualContext}`
+    } else if (brandContext) {
+      // Legacy: brandContext was just a string
+      enhancedPrompt = `${prompt}. ${brandContext}`
+    } else if (style) {
       enhancedPrompt = `${prompt}, ${style} style`
     }
 
@@ -109,6 +118,7 @@ export async function POST(req: NextRequest) {
       model: "flux-schnell",
       creditsUsed: 3,
       balance: creditResult.balanceAfter,
+      enhancedPrompt: enhancedPrompt !== prompt ? enhancedPrompt : undefined,
     })
   } catch (error: any) {
     console.error("=== IMAGE GEN ERROR ===")

@@ -23,6 +23,7 @@ import {
   AlertCircle,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { brandTemplates, applyBrandTemplate } from "@/lib/brand-templates"
 
 interface BrandProfile {
   id: string
@@ -387,6 +388,18 @@ function BrandForm({
   const [exampleInput, setExampleInput] = useState("")
   const [industryTemplate, setIndustryTemplate] = useState<string | null>(null)
 
+  const handleApplyTemplate = (template: import("@/lib/brand-templates").BrandTemplate) => {
+    const applied = applyBrandTemplate(template)
+    setColors(applied.colors)
+    setTone(applied.tone)
+    setPersonality(applied.personality)
+    setMood(applied.mood)
+    setFonts(applied.fonts)
+    setBrandExamples(applied.examples)
+    setDescription(applied.suggestedDescription)
+    setIndustryTemplate(template.id)
+  }
+
   const handleSave = () => {
     if (!name.trim()) return
     onSave({
@@ -480,6 +493,42 @@ function BrandForm({
                 <option key={m} value={m}>{m.charAt(0).toUpperCase() + m.slice(1)}</option>
               ))}
             </select>
+          </div>
+        </div>
+
+        {/* Industry Template Presets */}
+        <div className="rounded-lg border border-border p-4 space-y-4">
+          <h3 className="flex items-center gap-2 text-sm font-semibold">
+            <Palette className="h-4 w-4" />
+            Industry Presets
+          </h3>
+          <p className="text-xs text-muted-foreground">
+            Start with a pre-built industry template, then customize. This gives you colours, voice, fonts, and example copy in one click.
+          </p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+            {brandTemplates.map((tpl) => (
+              <button
+                key={tpl.id}
+                onClick={() => handleApplyTemplate(tpl)}
+                className={cn(
+                  "flex flex-col items-start gap-2 rounded-md border p-3 text-left transition-all",
+                  "hover:border-primary/60 hover:bg-primary/5",
+                )}
+                title={tpl.description}
+              >
+                <span className="text-lg">{tpl.emoji}</span>
+                <span className="text-xs font-medium leading-tight">{tpl.label}</span>
+                <div className="flex gap-0.5">
+                  {tpl.colors.slice(0, 5).map((c, i) => (
+                    <span
+                      key={i}
+                      className="h-2.5 w-2.5 rounded-full border border-black/10"
+                      style={{ backgroundColor: c }}
+                    />
+                  ))}
+                </div>
+              </button>
+            ))}
           </div>
         </div>
 

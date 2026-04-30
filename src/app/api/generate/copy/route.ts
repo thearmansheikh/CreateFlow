@@ -3,6 +3,7 @@ import Anthropic from '@anthropic-ai/sdk'
 import { createClient } from '@/lib/supabase/server'
 import { deductCredits, CREDIT_COSTS } from '@/lib/credits'
 import { saveGeneration } from '@/lib/save-generation'
+import { buildVoiceBrandContext, type FullBrandContext } from '@/lib/brand-context'
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -15,7 +16,8 @@ export async function POST(request: NextRequest) {
       prompt,
       type = 'caption', // caption, blog, tweet, email, product-description
       tone = 'professional',
-      brandContext, // optional brand voice context
+      brandContext, // legacy: string-only brand context
+      brandProfile, // new: full brand profile object
       maxLength = 500,
       workspaceId,
     } = body
@@ -37,9 +39,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: creditResult.error, balance: creditResult.balanceAfter }, { status: 402 })
     }
 
+    // Build rich brand context from full profile if available, fall back to legacy string
+    const richBrandContext = brandProfile
+      ? buildVoiceBrandContext(brandProfile as FullBrandContext)
+      : brandContext
+
     const systemPrompt = `You are a professional copywriter specializing in ${type === 'caption' ? 'social media content' : type === 'blog' ? 'long-form blog content' : type === 'tweet' ? 'Twitter/X posts' : type === 'email' ? 'email marketing' : 'product descriptions'}. 
-${brandContext ? `Match the brand voice: ${brandContext}.` : 'Use a professional and engaging tone.'}
-Tone: ${tone}.
+${richBrandContext ? `Match the brand voice and style: ${richBrandContext}.` : 'Use a professional and engaging tone.'}
+${!richBrandContext ? `Tone: ${tone}.` : tone !== 'professional' ? `Tone should be: ${tone}.` : ''}
 Keep responses under ${maxLength} characters unless the type requires longer content.`
 
     const message = await anthropic.messages.create({

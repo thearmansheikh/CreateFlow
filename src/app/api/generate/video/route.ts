@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { deductCredits, CREDIT_COSTS } from '@/lib/credits'
 import { saveGeneration } from '@/lib/save-generation'
+import { buildVisualBrandContext, type FullBrandContext } from '@/lib/brand-context'
 
 const BASE_URL = 'https://api.minimax.io'
 const API_KEY = process.env.MINIMAX_API_KEY
@@ -57,7 +58,7 @@ async function getFileUrl(fileId: string): Promise<string> {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { prompt, duration = 6, resolution = '768P', brandContext, workspaceId } = body
+    const { prompt, duration = 6, resolution = '768P', brandContext, brandProfile, workspaceId } = body
 
     if (!prompt) {
       return NextResponse.json({ error: 'Prompt is required' }, { status: 400 })
@@ -71,8 +72,13 @@ export async function POST(request: NextRequest) {
     const normalizedResolution = resolution.toUpperCase().includes('1080') ? '1080P' : '768P'
     const normalizedDuration = duration === 10 ? 10 : 6
 
-    // Build prompt with optional brand context
-    const enhancedPrompt = brandContext ? `${prompt}. ${brandContext}` : prompt
+    // Build visual brand context from full profile or fall back to legacy string
+    const visualContext = brandProfile
+      ? buildVisualBrandContext(brandProfile as FullBrandContext)
+      : brandContext
+
+    // Build prompt with full brand context (colors, mood, style, examples)
+    const enhancedPrompt = visualContext ? `${prompt}. ${visualContext}` : prompt
 
     // Auth check
     const supabase = await createClient()
