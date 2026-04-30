@@ -18,6 +18,9 @@ import {
   Type,
   Eye,
   Loader2,
+  Upload,
+  FileText,
+  AlertCircle,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -70,6 +73,8 @@ export default function BrandsPage() {
   const [brands, setBrands] = useState<BrandProfile[]>([])
   const [editingBrand, setEditingBrand] = useState<BrandProfile | null>(null)
   const [isCreating, setIsCreating] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const [uploadError, setUploadError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [workspaceId, setWorkspaceId] = useState<string | null>(null)
 
@@ -159,6 +164,59 @@ export default function BrandsPage() {
     loadBrands()
   }
 
+  const handleExampleUpload = async (files: File[]) => {
+    if (!workspaceId) {
+      setUploadError("No workspace found")
+      return []
+    }
+
+    setUploading(true)
+    setUploadError(null)
+    const uploadedUrls: string[] = []
+    const ALLOWED = [
+      "text/plain",
+      "application/pdf",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "text/markdown",
+      "application/msword",
+    ]
+
+    try {
+      for (const file of files) {
+        if (!ALLOWED.includes(file.type)) {
+          setUploadError(`"${file.name}" is not a supported file type (TXT, PDF, DOCX, MD)`)
+          continue
+        }
+        if (file.size > 10 * 1024 * 1024) {
+          setUploadError(`"${file.name}" exceeds the 10 MB limit`)
+          continue
+        }
+
+        const safeName = file.name.replace(/\s+/g, "_").replace(/[^a-zA-Z0-9._-]/g, "")
+        const timestamp = Date.now()
+        const storagePath = `brand_examples/${workspaceId}/${timestamp}_${safeName}`
+
+        const { error: uploadErr } = await supabase.storage
+          .from("content")
+          .upload(storagePath, file, { cacheControl: "3600" })
+
+        if (uploadErr) throw uploadErr
+
+        const { data: { publicUrl } } = supabase.storage
+          .from("content")
+          .getPublicUrl(storagePath)
+
+        uploadedUrls.push(publicUrl)
+      }
+    } catch (err: any) {
+      setUploadError(err.message || "Upload failed")
+    } finally {
+      setUploading(false)
+    }
+
+    return uploadedUrls
+  }
+
   if (loading) {
     return (
       <div className="flex-1 flex items-center justify-center">
@@ -185,6 +243,10 @@ export default function BrandsPage() {
           brand={editingBrand}
           onSave={handleSave}
           onCancel={() => { setEditingBrand(null); setIsCreating(false) }}
+          onExampleUpload={handleExampleUpload}
+          uploading={uploading}
+          uploadError={uploadError}
+          clearUploadError={() => setUploadError(null)}
         />
       )}
 
@@ -296,10 +358,22 @@ export default function BrandsPage() {
   )
 }
 
-function BrandForm({ brand, onSave, onCancel }: {
+function BrandForm({
+  brand,
+  onSave,
+  onCancel,
+  onExampleUpload,
+  uploading,
+  uploadError,
+  clearUploadError,
+}: {
   brand: BrandProfile | null
   onSave: (brand: Partial<BrandProfile>) => void
   onCancel: () => void
+  onExampleUpload: (files: File[]) => Promise<string[]>
+  uploading: boolean
+  uploadError: string | null
+  clearUploadError: () => void
 }) {
   const [name, setName] = useState(brand?.name || "")
   const [description, setDescription] = useState(brand?.description || "")
@@ -309,6 +383,9 @@ function BrandForm({ brand, onSave, onCancel }: {
   const [colors, setColors] = useState<string[]>(brand?.brand_colors || [])
   const [fonts, setFonts] = useState<string>(brand?.brand_fonts?.join(", ") || "")
   const [logoUrl, setLogoUrl] = useState(brand?.logo_url || "")
+  const [brandExamples, setBrandExamples] = useState<string[]>(brand?.brand_examples || [])
+  const [exampleInput, setExampleInput] = useState("")
+  const [industryTemplate, setIndustryTemplate] = useState<string | null>(null)
 
   const handleSave = () => {
     if (!name.trim()) return
@@ -321,6 +398,7 @@ function BrandForm({ brand, onSave, onCancel }: {
       brand_colors: colors,
       brand_fonts: fonts.split(",").map((f) => f.trim()).filter(Boolean),
       logo_url: logoUrl.trim(),
+      brand_examples: brandExamples,
     })
   }
 
@@ -470,6 +548,152 @@ function BrandForm({ brand, onSave, onCancel }: {
         <div className="space-y-2">
           <Label>Brand Fonts (comma-separated)</Label>
           <Input value={fonts} onChange={(e) => setFonts(e.target.value)} placeholder="Inter, Geist, System UI" />
+        </div>
+
+        {/* Brand Examples */}
+        <div className="rounded-lg border border-border p-4 space-y-3">
+          <h3 className="flex items-center gap-2 text-sm font-semibold">
+            <Type className="h-4 w-4" />
+            Brand Examples
+          </h3>
+          <p className="text-xs text-muted-foreground">Paste examples of your brand's copy or upload documents (TXT, PDF, DOCX, MD) so AI can learn your voice</p>
+          
+          {/* File Upload Zone */}
+          <div className="space-y-2">
+            <label
+              className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-border p-4 cursor-pointer transition-colors hover:border-primary/50 hover:bg-primary/5"
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={async (e) => {
+                e.preventDefault()
+                clearUploadError()
+                const files = Array.from(e.dataTransfer.files)
+                if (files.length > 0) {
+                  const urls = await onExampleUpload(files)
+                  if (urls.length > 0) {
+                    setBrandExamples(prev => [...prev, ...urls])
+                  }
+                }
+              }}
+            >
+              <input
+                type="file"
+                className="hidden"
+                accept=".txt,.pdf,.docx,.md,.doc"
+                multiple
+                onChange={async (e) => {
+                  clearUploadError()
+                  const files = Array.from(e.target.files || [])
+                  if (files.length > 0) {
+                    const urls = await onExampleUpload(files)
+                    if (urls.length > 0) {
+                      setBrandExamples(prev => [...prev, ...urls])
+                    }
+                    e.target.value = ""
+                  }
+                }}
+              />
+              {uploading ? (
+                <div className="flex items-center gap-2">
+                  <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">Uploading...</span>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center gap-1">
+                  <Upload className="h-6 w-6 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">
+                    Drop files here or <span className="text-primary underline">browse</span>
+                  </span>
+                  <span className="text-xs text-muted-foreground">TXT, PDF, DOCX, MD — max 10 MB each</span>
+                </div>
+              )}
+            </label>
+            {uploadError && (
+              <div className="flex items-center gap-2 text-sm text-destructive">
+                <AlertCircle className="h-4 w-4" />
+                {uploadError}
+              </div>
+            )}
+          </div>
+          
+          {/* Manual paste input */}
+          <div className="flex gap-2">
+            <Input
+              value={exampleInput}
+              onChange={(e) => setExampleInput(e.target.value)}
+              placeholder="Paste a sample post or tagline..."
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && exampleInput.trim()) {
+                  setBrandExamples(prev => [...prev, exampleInput.trim()])
+                  setExampleInput("")
+                }
+              }}
+            />
+            <Button
+              variant="secondary"
+              size="sm"
+              disabled={!exampleInput.trim()}
+              onClick={() => {
+                if (exampleInput.trim()) {
+                  setBrandExamples(prev => [...prev, exampleInput.trim()])
+                  setExampleInput("")
+                }
+              }}
+            >
+              Add
+            </Button>
+          </div>
+          {brandExamples.length > 0 && (
+            <div className="space-y-2 max-h-40 overflow-auto">
+              {brandExamples.map((ex, i) => (
+                <div key={i} className="flex items-start gap-2 rounded-md bg-secondary p-2 text-sm">
+                  {ex.startsWith("http") ? (
+                    <>
+                      <FileText className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
+                      <span className="flex-1 truncate text-xs">{ex.split("/").pop()}</span>
+                    </>
+                  ) : (
+                    <span className="flex-1 break-words">{ex}</span>
+                  )}
+                  <button onClick={() => setBrandExamples(prev => prev.filter((_, idx) => idx !== i))} className="shrink-0">
+                    <X className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Industry Template Presets */}
+        <div className="rounded-lg border border-border p-4 space-y-3">
+          <h3 className="text-sm font-semibold">Quick Start — Industry Templates</h3>
+          <p className="text-xs text-muted-foreground">Pick an industry to auto-fill common brand settings</p>
+          <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
+            {[
+              { id: "saas", label: "SaaS", emoji: "💻", colors: ["#6366f1", "#8b5cf6", "#a78bfa"], tone: "professional", personality: "authoritative", mood: "modern" },
+              { id: "food", label: "Food", emoji: "🍽️", colors: ["#f97316", "#ef4444", "#eab308"], tone: "casual", personality: "friendly", mood: "playful" },
+              { id: "fashion", label: "Fashion", emoji: "👗", colors: ["#18181b", "#d4a574", "#f5f5f5"], tone: "formal", personality: "minimal", mood: "elegant" },
+              { id: "fitness", label: "Fitness", emoji: "💪", colors: ["#22c55e", "#16a34a", "#1e3a2f"], tone: "inspirational", personality: "bold", mood: "bold" },
+              { id: "beauty", label: "Beauty", emoji: "✨", colors: ["#f43f5e", "#fb7185", "#fda4af"], tone: "playful", personality: "warm", mood: "modern" },
+            ].map(template => (
+              <button
+                key={template.id}
+                onClick={() => {
+                  setColors(template.colors)
+                  setTone(template.tone)
+                  setPersonality(template.personality)
+                  setMood(template.mood)
+                  setIndustryTemplate(template.id)
+                }}
+                className={cn(
+                  "rounded-lg border p-3 text-center transition-all hover:border-primary/50",
+                  industryTemplate === template.id ? "border-primary bg-primary/5" : "border-border"
+                )}
+              >
+                <span className="text-xl">{template.emoji}</span>
+                <p className="text-xs mt-1">{template.label}</p>
+              </button>
+            ))}
+          </div>
         </div>
       </CardContent>
       <CardFooter className="flex gap-3 border-t border-border/50">
