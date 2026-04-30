@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
 import { createClient } from '@/lib/supabase/server'
 import { deductCredits, CREDIT_COSTS } from '@/lib/credits'
+import { saveGeneration } from '@/lib/save-generation'
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -16,6 +17,7 @@ export async function POST(request: NextRequest) {
       tone = 'professional',
       brandContext, // optional brand voice context
       maxLength = 500,
+      workspaceId,
     } = body
 
     if (!prompt) {
@@ -53,6 +55,20 @@ Keep responses under ${maxLength} characters unless the type requires longer con
       .filter(block => block.type === 'text')
       .map(block => (block as Anthropic.TextBlock).text)
       .join('\n')
+
+    // Save generation record
+    const title = `${type.charAt(0).toUpperCase() + type.slice(1)}: ${prompt.slice(0, 50)}${prompt.length > 50 ? '...' : ''}`
+
+    await saveGeneration({
+      userId: user.id,
+      workspaceId,
+      type: 'copy',
+      title,
+      prompt,
+      outputText: content,
+      modelUsed: 'claude-sonnet-4-20250514',
+      mimeType: 'text/plain',
+    })
 
     return NextResponse.json({
       success: true,

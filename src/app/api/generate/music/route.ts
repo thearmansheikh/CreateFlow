@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { deductCredits, CREDIT_COSTS } from '@/lib/credits'
+import { saveGeneration } from '@/lib/save-generation'
 
 const BASE_URL = 'https://api.minimax.io'
 const API_KEY = process.env.MINIMAX_API_KEY
@@ -9,7 +10,7 @@ const MODEL = 'music-2.6-free'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { prompt, lyrics, instrumental = false, brandContext } = body
+    const { prompt, lyrics, instrumental = false, brandContext, workspaceId } = body
 
     if (!prompt && !lyrics) {
       return NextResponse.json({ error: 'Prompt or lyrics are required' }, { status: 400 })
@@ -81,6 +82,25 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(hexAudio, 'hex')
     const base64 = buffer.toString('base64')
     const dataUrl = `data:audio/mp3;base64,${base64}`
+
+    // Save generation record
+    const displayTitle = prompt
+      ? prompt.slice(0, 50) + (prompt.length > 50 ? '...' : '')
+      : lyrics
+        ? lyrics.slice(0, 50) + (lyrics.length > 50 ? '...' : '')
+        : 'Generated Music'
+
+    await saveGeneration({
+      userId: user.id,
+      workspaceId,
+      type: 'music',
+      title: displayTitle,
+      prompt: prompt || '',
+      outputUrl: dataUrl,
+      modelUsed: MODEL,
+      mimeType: 'audio/mp3',
+      duration: data.extra_info?.music_duration || 0,
+    })
 
     return NextResponse.json({
       success: true,

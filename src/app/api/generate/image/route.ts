@@ -1,7 +1,8 @@
 import Replicate from "replicate"
 import { NextRequest, NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
-import { deductCredits } from "@/lib/credits"
+import { deductCredits, CREDIT_COSTS } from "@/lib/credits"
+import { saveGeneration } from "@/lib/save-generation"
 
 const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
@@ -87,6 +88,20 @@ export async function POST(req: NextRequest) {
         : []
 
     console.log("Normalized images:", images)
+
+    // Save to database
+    await saveGeneration({
+      userId: user.id,
+      workspaceId,
+      type: "image",
+      title: prompt.slice(0, 50) + (prompt.length > 50 ? "..." : ""),
+      prompt: enhancedPrompt,
+      outputUrl: images[0],
+      modelUsed: "flux-schnell",
+      mimeType: "image/png",
+      width: dim.width,
+      height: dim.height,
+    })
 
     return NextResponse.json({
       success: true,

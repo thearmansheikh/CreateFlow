@@ -2,9 +2,10 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { CreditCard, ArrowRight, Check, Zap, Mail } from "lucide-react"
+import { CreditCard, ArrowRight, Check, Zap, Mail, Clock } from "lucide-react"
 import { useState } from "react"
 import { cn } from "@/lib/utils"
+import Link from "next/link"
 
 const tiers = [
   {
@@ -158,11 +159,21 @@ export default function BillingPage() {
       {/* Credit costs */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Zap className="h-5 w-5 text-muted-foreground" />
-            Credit Costs
-          </CardTitle>
-          <CardDescription>How many credits each generation uses</CardDescription>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                <Zap className="h-5 w-5 text-muted-foreground" />
+                Credit Costs
+              </CardTitle>
+              <CardDescription>How many credits each generation uses</CardDescription>
+            </div>
+            <Button variant="ghost" size="sm" asChild>
+              <Link href="/dashboard/settings/billing/history">
+                <Clock className="mr-2 h-4 w-4" />
+                Billing History
+              </Link>
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">

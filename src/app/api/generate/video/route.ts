@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { deductCredits, CREDIT_COSTS } from '@/lib/credits'
+import { saveGeneration } from '@/lib/save-generation'
 
 const BASE_URL = 'https://api.minimax.io'
 const API_KEY = process.env.MINIMAX_API_KEY
@@ -56,7 +57,7 @@ async function getFileUrl(fileId: string): Promise<string> {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { prompt, duration = 6, resolution = '768P', brandContext } = body
+    const { prompt, duration = 6, resolution = '768P', brandContext, workspaceId } = body
 
     if (!prompt) {
       return NextResponse.json({ error: 'Prompt is required' }, { status: 400 })
@@ -94,6 +95,17 @@ export async function POST(request: NextRequest) {
 
     console.log(`[MiniMax Video] Task created: ${task_id}`)
 
+
+    // Save generation record (processing)
+    await saveGeneration({
+      userId: user.id,
+      workspaceId,
+      type: 'video',
+      title: prompt.slice(0, 50) + (prompt.length > 50 ? '...' : ''),
+      prompt: enhancedPrompt,
+      modelUsed: MODEL,
+      duration: normalizedDuration,
+    })
     return NextResponse.json({
       success: true,
       taskId: task_id,
