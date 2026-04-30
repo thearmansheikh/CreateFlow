@@ -1,806 +1,886 @@
 {
-  "version": 2,
-  "lastModified": "2026-04-27T20:46:06.101Z",
+  "version": 3,
+  "lastModified": "2026-04-30T14:57:06.424Z",
   "entries": [
     {
-      "id": "e22322ee-fba8-49ba-b413-a8a4fa1d726b",
+      "id": "cb883665-1464-4af0-ac34-571b7ef9bea5",
       "category": "bug-fix",
       "content": "Discovery: The fix is applied — no `state.clock` or `getElapsedTime` calls left in the code.",
       "createdAt": "2026-04-20T00:00:00.000Z",
       "updatedAt": "2026-04-20T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "d1c900f3-33ab-43ff-aa86-252a442ad818",
+      "id": "914b06ad-ac25-4485-97ca-f695b51ac3cc",
       "category": "general",
       "content": "Correction: Module has been deprecated. Please use THREE.Timer instead. (anonymous) @ forward-logs-shared.ts:95 forward-logs-shared.",
       "createdAt": "2026-04-20T00:00:00.000Z",
       "updatedAt": "2026-04-20T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "8847f038-6e78-474d-a2f5-3888d242854c",
+      "id": "43394747-8457-4719-b823-33ec5ad8a3ea",
       "category": "decision",
       "content": "Decision: Oh wow perfect for now.",
       "createdAt": "2026-04-20T00:00:00.000Z",
       "updatedAt": "2026-04-20T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "18ac3fa7-0f7c-467e-ac1a-7181843ab276",
+      "id": "e1fe9f12-ac05-45ef-a524-f9673ca57284",
       "category": "bug-fix",
       "content": "Discovery: The issue is that Replicate's SDK returns `FileOutput` objects (not plain strings), and",
       "createdAt": "2026-04-20T00:00:00.000Z",
       "updatedAt": "2026-04-20T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "9b6b566d-545d-4eec-9a4e-aa7aa30beab9",
+      "id": "8b06e287-fc50-41f0-9b59-89606e509406",
       "category": "general",
       "content": "Discovery: — that's the right place for it. The problem was that middleware was ALSO calling `getUser()`, which consumed the refresh",
       "createdAt": "2026-04-20T00:00:00.000Z",
       "updatedAt": "2026-04-20T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "7f6d2a7a-e469-45e1-9184-068deb989d20",
+      "id": "b9d26ce4-9003-4aed-92b5-0aa724ac5d6e",
       "category": "general",
       "content": "The user is working on a Next.js application located at `c:\\Users\\thear\\OneDrive\\Desktop\\CreateFlow`.",
       "createdAt": "2026-04-20T00:00:00.000Z",
       "updatedAt": "2026-04-20T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "bcc8cfdb-40cb-4ab8-b72f-736863ab2894",
+      "id": "7253f315-3e8c-4cfe-a26a-3f9451b6fbd7",
       "category": "bug-fix",
       "content": "The fix involves a new migration file (`003_fix_signup_trigger.sql`) that safely handles cases where a user row already exists from a previous failed attempt.",
       "createdAt": "2026-04-20T00:00:00.000Z",
       "updatedAt": "2026-04-20T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "60f3dacc-fe0b-428e-828a-352d79ec131a",
+      "id": "afe7a91a-5e27-4e4e-ba15-d46ee295d05f",
       "category": "bug-fix",
       "content": "A bug was identified in the `handle_new_user()` trigger function causing signup failures due to race conditions or duplicate entry errors.",
       "createdAt": "2026-04-20T00:00:00.000Z",
       "updatedAt": "2026-04-20T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "44214582-8f51-4aee-80b4-b9ed03f2c6cb",
+      "id": "02b99244-6502-49c1-a9f7-630500562fec",
       "category": "general",
       "content": "The project uses Supabase for backend services, specifically relying on database triggers for user creation logic.",
       "createdAt": "2026-04-20T00:00:00.000Z",
       "updatedAt": "2026-04-20T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "e8de1771-779f-42c0-a96a-4a1e30384e27",
+      "id": "b05be309-2947-446c-bc08-8eae1bdd508a",
       "category": "general",
       "content": "Authentication pages (sign-in, sign-up, callback) are fully wired to Supabase, enabling secure user management and session handling.",
       "createdAt": "2026-04-20T00:00:00.000Z",
       "updatedAt": "2026-04-20T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "5cb5655b-ff16-47fa-8cba-e174b1e60f22",
+      "id": "f9055639-f9c4-46b1-a954-24f341772633",
       "category": "general",
       "content": "Recent build fixes resolved type mismatches in the Brands page, API scope errors in enhance-prompt, and Stripe SDK version conflicts.",
       "createdAt": "2026-04-20T00:00:00.000Z",
       "updatedAt": "2026-04-20T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "bac16e21-99fb-4146-b4ba-e914e6495586",
+      "id": "af84ae0a-e076-4a4d-ae49-f42786b9d27f",
       "category": "general",
       "content": "The database schema consists of 12 tables with Row Level Security (RLS) policies, indexes, and triggers, including an auto-workspace creation migration on user signup.",
       "createdAt": "2026-04-20T00:00:00.000Z",
       "updatedAt": "2026-04-20T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "da25d165-c095-4a3d-8dd2-0cf39d65c1c8",
+      "id": "670ef747-16c3-423d-ae8c-25c0188cc96d",
       "category": "general",
       "content": "Localhost requests are blocked by the tooling to prevent access to private/internal addresses, requiring external API calls for development.",
       "createdAt": "2026-04-20T00:00:00.000Z",
       "updatedAt": "2026-04-20T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "5ad99b6a-8d06-4e0f-9172-8f9323d933ac",
+      "id": "ae6afbcf-fb99-49ba-b5fa-cfb3fe122ca0",
       "category": "tool-config",
       "content": "The project uses Next.js with Supabase for backend services and authentication, configured via environment variables including URL, anon key, and service role key.",
       "createdAt": "2026-04-20T00:00:00.000Z",
       "updatedAt": "2026-04-20T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "66251675-4f68-48d4-97b9-ca4f6145d6af",
+      "id": "70c8133c-3822-4c58-aaee-a81efa32142b",
       "category": "general",
       "content": "The user prefers precise string matching for file edits, as indicated by errors when whitespace or indentation does not match exactly.",
       "createdAt": "2026-04-20T00:00:00.000Z",
       "updatedAt": "2026-04-20T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "d75f0c61-117a-4275-8f1f-91ea5c3b8243",
+      "id": "ff4784ee-2082-403e-8aac-29d8f5601483",
       "category": "general",
       "content": "The database schema includes 12 tables with Row Level Security (RLS) policies, indexes, and triggers, stored in supabase/init.sql.",
       "createdAt": "2026-04-20T00:00:00.000Z",
       "updatedAt": "2026-04-20T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "83b4c7fd-603b-4887-a668-27f71fe6468f",
+      "id": "e5caaf35-7c51-4d20-b1b6-e41cde39cbe9",
       "category": "general",
       "content": "The current development focus is on integrating Supabase auth with default workspace creation upon sign-up and connecting workspaces to the dashboard.",
       "createdAt": "2026-04-20T00:00:00.000Z",
       "updatedAt": "2026-04-20T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "13da2ee0-b439-482f-ab3e-0fd8fe99cee7",
+      "id": "69d74493-b76b-44b7-bda5-3a7a629e93e0",
       "category": "architecture",
       "content": "The project uses pnpm as the package manager and follows a workspace structure with specific build phases including Foundation & Auth, Dashboard, AI Generation Suite, and Credit System.",
       "createdAt": "2026-04-20T00:00:00.000Z",
       "updatedAt": "2026-04-20T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "72001df6-9949-4576-b80e-9448631fc2a5",
+      "id": "1ac096a5-fa4b-44df-927c-aac27cf6c1c5",
       "category": "general",
       "content": "The user is working on a Next.js project named 'CreateFlow' located at C:\\Users\\thear\\OneDrive\\Desktop\\CreateFlow, utilizing Supabase for authentication and database management.",
       "createdAt": "2026-04-20T00:00:00.000Z",
       "updatedAt": "2026-04-20T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "9936661e-1ba3-45ba-b7c3-2d01c30c4c92",
+      "id": "35fc3584-13fa-440d-8a3f-bc1a9ed8acf0",
       "category": "tool-config",
       "content": "AI generation functionality relies on an Anthropic API key configured in the environment variables.",
       "createdAt": "2026-04-20T00:00:00.000Z",
       "updatedAt": "2026-04-20T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "5a16ca61-21e7-4904-901c-d925b2368ebd",
+      "id": "921050fa-c16b-40f2-9f6a-7b80704da842",
       "category": "general",
       "content": "Stripe integration is planned using the SDK, requiring configuration of secret keys, webhook secrets, and publishable keys in the .env.local file.",
       "createdAt": "2026-04-20T00:00:00.000Z",
       "updatedAt": "2026-04-20T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "c15c3e64-306b-4a42-89e0-5ceb20de19f6",
+      "id": "14b72ecf-0139-471a-8c03-51e085e1bf23",
       "category": "tool-config",
       "content": "The project is configured to use Supabase for authentication and database, but placeholder environment variables are currently set and real credentials are required before proceeding.",
       "createdAt": "2026-04-20T00:00:00.000Z",
       "updatedAt": "2026-04-20T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "9b79c123-7542-4d6f-bd3f-133f662a0508",
+      "id": "0539e659-a5de-4bd7-9d3b-5415c4844da0",
       "category": "bug-fix",
       "content": "The build process currently passes with zero errors after fixing three specific issues: a TypeScript type error in the brands page, a scope error in the enhance-prompt API, and a Stripe version mismatch.",
       "createdAt": "2026-04-20T00:00:00.000Z",
       "updatedAt": "2026-04-20T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "225beca3-63f3-499a-8164-37b0563b2cbc",
+      "id": "d26b39c2-6ccf-418e-a0aa-a30d940e54f4",
       "category": "convention",
       "content": "The project uses Next.js 16.2.4 with Turbopack and has a deprecation warning regarding the 'middleware' file convention, which should be replaced with 'proxy'.",
       "createdAt": "2026-04-20T00:00:00.000Z",
       "updatedAt": "2026-04-20T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "e02f4708-830e-4ab6-80cf-fc7b5b31a6a5",
+      "id": "846d242c-da8d-491e-8450-6884eb67701f",
       "category": "architecture",
       "content": "The app includes a full marketing landing page and a dashboard layout with sidebar navigation.",
       "createdAt": "2026-04-20T00:00:00.000Z",
       "updatedAt": "2026-04-20T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "7b7489e5-8da6-4538-ac0a-4fc34b0540f4",
+      "id": "87a06e44-5c42-4b2b-b3db-4724b89997bb",
       "category": "general",
       "content": "The Content Library page is the most developed feature, supporting folder management, search, type filtering, and grid/list views.",
       "createdAt": "2026-04-20T00:00:00.000Z",
       "updatedAt": "2026-04-20T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "652bf558-8e97-4cdc-873f-499be5278a69",
+      "id": "ed2a7885-a5cf-4156-8f4b-09a682b44720",
       "category": "tool-config",
       "content": "Supabase is configured for authentication (sign-in/sign-up) but requires backend connection setup.",
       "createdAt": "2026-04-20T00:00:00.000Z",
       "updatedAt": "2026-04-20T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "0655f4ae-4bbd-44ea-82a2-9e9cfa30d15c",
+      "id": "72d852c1-d986-4ad9-92f7-e58d2eaad9ad",
       "category": "general",
       "content": "The application utilizes Lucide-react as the primary icon library for UI elements.",
       "createdAt": "2026-04-20T00:00:00.000Z",
       "updatedAt": "2026-04-20T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "18013d67-5d10-4e06-be95-82e585e69794",
+      "id": "1c86cec2-8b9c-4023-9838-b57ea569e40c",
       "category": "general",
       "content": "The project uses React with the 'use client' directive for interactive components like the Library page.",
       "createdAt": "2026-04-20T00:00:00.000Z",
       "updatedAt": "2026-04-20T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "4048be50-e820-4671-add6-0b05bb7e38d8",
+      "id": "288d580f-b40c-4111-9eed-67e823c7ede6",
       "category": "bug-fix",
       "content": "Discovery: The issue is that Replicate's SDK returns `FileOutput` objects (not plain strings), and",
       "createdAt": "2026-04-19T00:00:00.000Z",
       "updatedAt": "2026-04-19T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "94299323-363b-4f29-86ab-07484b91301f",
+      "id": "cadf2e00-2847-4869-81a6-7d8c449c8ffb",
       "category": "general",
       "content": "Discovery: — that's the right place for it. The problem was that middleware was ALSO calling `getUser()`, which consumed the refresh",
       "createdAt": "2026-04-19T00:00:00.000Z",
       "updatedAt": "2026-04-19T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "e77d4732-8267-4449-a9c9-148f821abfe3",
+      "id": "70a43cc9-430a-48b3-aa4c-d72f85f7e8d0",
       "category": "general",
       "content": "The user is working on a Next.js application located at `c:\\Users\\thear\\OneDrive\\Desktop\\CreateFlow`.",
       "createdAt": "2026-04-19T00:00:00.000Z",
       "updatedAt": "2026-04-19T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "7de9eedc-e2e9-413d-8fea-25fcca03e1ea",
+      "id": "c2beaf30-24c4-4d2d-83c8-c57019dc498e",
       "category": "bug-fix",
       "content": "The fix involves a new migration file (`003_fix_signup_trigger.sql`) that safely handles cases where a user row already exists from a previous failed attempt.",
       "createdAt": "2026-04-19T00:00:00.000Z",
       "updatedAt": "2026-04-19T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "b584b1c1-3d3b-448a-814f-17310c83adf3",
+      "id": "48e8e1d6-0997-47f3-a2d2-a9c6aa3b1276",
       "category": "bug-fix",
       "content": "A bug was identified in the `handle_new_user()` trigger function causing signup failures due to race conditions or duplicate entry errors.",
       "createdAt": "2026-04-19T00:00:00.000Z",
       "updatedAt": "2026-04-19T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "026db12d-99e2-4a44-a418-d1c4a4b0de57",
+      "id": "60d6f7ff-d420-4bdc-adf7-8a0632214dd8",
       "category": "general",
       "content": "The project uses Supabase for backend services, specifically relying on database triggers for user creation logic.",
       "createdAt": "2026-04-19T00:00:00.000Z",
       "updatedAt": "2026-04-19T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "1baa5f39-81eb-4f74-ba70-c257b530b6fc",
+      "id": "1a697861-cec4-4ec4-a6d6-a9eecc74df30",
       "category": "general",
       "content": "Authentication pages (sign-in, sign-up, callback) are fully wired to Supabase, enabling secure user management and session handling.",
       "createdAt": "2026-04-19T00:00:00.000Z",
       "updatedAt": "2026-04-19T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "89293b54-90d2-4026-bc03-33807d037429",
+      "id": "bf3f6bd6-9bdf-466c-b560-d327a28f7d05",
       "category": "general",
       "content": "Recent build fixes resolved type mismatches in the Brands page, API scope errors in enhance-prompt, and Stripe SDK version conflicts.",
       "createdAt": "2026-04-19T00:00:00.000Z",
       "updatedAt": "2026-04-19T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "a4b0b0a4-22fa-4507-99cf-c69d0f7da9c7",
+      "id": "a95a65b7-cd26-4b0c-a482-4b3a514cb31c",
       "category": "general",
       "content": "The database schema consists of 12 tables with Row Level Security (RLS) policies, indexes, and triggers, including an auto-workspace creation migration on user signup.",
       "createdAt": "2026-04-19T00:00:00.000Z",
       "updatedAt": "2026-04-19T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "e3c866d8-e579-42f3-a711-bc780ff2c5fd",
+      "id": "d7839621-c06e-4223-ba5e-4171bfa445c9",
       "category": "general",
       "content": "Localhost requests are blocked by the tooling to prevent access to private/internal addresses, requiring external API calls for development.",
       "createdAt": "2026-04-19T00:00:00.000Z",
       "updatedAt": "2026-04-19T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "4cb9425b-22a9-4be9-96d3-6f941fbb2fb6",
+      "id": "c5730d31-07f0-4b83-9c11-cdf48cde33b6",
       "category": "tool-config",
       "content": "The project uses Next.js with Supabase for backend services and authentication, configured via environment variables including URL, anon key, and service role key.",
       "createdAt": "2026-04-19T00:00:00.000Z",
       "updatedAt": "2026-04-19T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "98777ef3-ad52-41de-aebe-0648d065347e",
+      "id": "7b539bf1-729a-4c2c-8ef2-8523eb1c2f3c",
       "category": "general",
       "content": "The user prefers precise string matching for file edits, as indicated by errors when whitespace or indentation does not match exactly.",
       "createdAt": "2026-04-19T00:00:00.000Z",
       "updatedAt": "2026-04-19T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "ffa54877-aa2a-4487-9fa1-236748035c23",
+      "id": "f14591c0-4214-4bc1-960f-39d9c300d6da",
       "category": "general",
       "content": "The database schema includes 12 tables with Row Level Security (RLS) policies, indexes, and triggers, stored in supabase/init.sql.",
       "createdAt": "2026-04-19T00:00:00.000Z",
       "updatedAt": "2026-04-19T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "66cc602e-124f-469a-98d2-a23d9edd5b01",
+      "id": "bab142b6-02c5-4b97-b04d-d8c707f7f26e",
       "category": "general",
       "content": "The current development focus is on integrating Supabase auth with default workspace creation upon sign-up and connecting workspaces to the dashboard.",
       "createdAt": "2026-04-19T00:00:00.000Z",
       "updatedAt": "2026-04-19T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "5ea04c29-652e-44cd-b51e-e00835e9360f",
+      "id": "6faed86a-8d37-4514-9b59-a2f05ae74965",
       "category": "architecture",
       "content": "The project uses pnpm as the package manager and follows a workspace structure with specific build phases including Foundation & Auth, Dashboard, AI Generation Suite, and Credit System.",
       "createdAt": "2026-04-19T00:00:00.000Z",
       "updatedAt": "2026-04-19T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "3a5f9260-9aa9-4569-80e7-4760eb7ef90b",
+      "id": "163cc6b1-0195-4acb-95b9-43a57de51907",
       "category": "general",
       "content": "The user is working on a Next.js project named 'CreateFlow' located at C:\\Users\\thear\\OneDrive\\Desktop\\CreateFlow, utilizing Supabase for authentication and database management.",
       "createdAt": "2026-04-19T00:00:00.000Z",
       "updatedAt": "2026-04-19T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "4c9c3e66-c520-48f5-a256-22a3a55dd100",
+      "id": "bc45646a-639e-4a20-b225-d499066f12c4",
       "category": "tool-config",
       "content": "AI generation functionality relies on an Anthropic API key configured in the environment variables.",
       "createdAt": "2026-04-19T00:00:00.000Z",
       "updatedAt": "2026-04-19T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "298f5629-2b3d-42d0-a000-02e99c7395d0",
+      "id": "6f397fb8-958d-4c66-b9d4-21de841d99c6",
       "category": "general",
       "content": "Stripe integration is planned using the SDK, requiring configuration of secret keys, webhook secrets, and publishable keys in the .env.local file.",
       "createdAt": "2026-04-19T00:00:00.000Z",
       "updatedAt": "2026-04-19T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "7c07fae6-49a0-487e-9164-cb43c2afebbd",
+      "id": "5e70d481-8b4f-4998-b711-dc4f8202d824",
       "category": "tool-config",
       "content": "The project is configured to use Supabase for authentication and database, but placeholder environment variables are currently set and real credentials are required before proceeding.",
       "createdAt": "2026-04-19T00:00:00.000Z",
       "updatedAt": "2026-04-19T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "fea84c57-e354-4763-b86b-fd4e79f99931",
+      "id": "14ee5bac-0adf-4edb-a69a-9388ce7c1fdb",
       "category": "bug-fix",
       "content": "The build process currently passes with zero errors after fixing three specific issues: a TypeScript type error in the brands page, a scope error in the enhance-prompt API, and a Stripe version mismatch.",
       "createdAt": "2026-04-19T00:00:00.000Z",
       "updatedAt": "2026-04-19T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "22368997-4316-41bd-84e9-e9ea0a17c81b",
+      "id": "110eb23c-231d-4fb1-b6ea-9aad38aea9b2",
       "category": "convention",
       "content": "The project uses Next.js 16.2.4 with Turbopack and has a deprecation warning regarding the 'middleware' file convention, which should be replaced with 'proxy'.",
       "createdAt": "2026-04-19T00:00:00.000Z",
       "updatedAt": "2026-04-19T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "b3981770-b57d-4f21-92c4-6e6426df8d05",
+      "id": "19593862-cd98-49db-9b61-5ee730eaad64",
       "category": "architecture",
       "content": "The app includes a full marketing landing page and a dashboard layout with sidebar navigation.",
       "createdAt": "2026-04-19T00:00:00.000Z",
       "updatedAt": "2026-04-19T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "534eaf2a-c6c0-4e1a-800e-d153170537cc",
+      "id": "5cafd6c5-6446-4e8e-b2cd-c12575424d29",
       "category": "general",
       "content": "The Content Library page is the most developed feature, supporting folder management, search, type filtering, and grid/list views.",
       "createdAt": "2026-04-19T00:00:00.000Z",
       "updatedAt": "2026-04-19T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "091ecf8e-f395-4712-811b-1e34091501e7",
+      "id": "537701bd-d4b1-4948-aa4d-8b74a99f2c66",
       "category": "tool-config",
       "content": "Supabase is configured for authentication (sign-in/sign-up) but requires backend connection setup.",
       "createdAt": "2026-04-19T00:00:00.000Z",
       "updatedAt": "2026-04-19T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "c1de350b-b4df-4002-bb1e-af95af7b0b37",
+      "id": "187aea57-9fdf-4f8c-9cbd-00d6a7969fe3",
       "category": "general",
       "content": "The application utilizes Lucide-react as the primary icon library for UI elements.",
       "createdAt": "2026-04-19T00:00:00.000Z",
       "updatedAt": "2026-04-19T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "a40defc2-7961-4df8-ab35-e36d11cdedce",
+      "id": "6015849f-cc23-49ec-b2e8-a619a8e487a1",
       "category": "general",
       "content": "The project uses React with the 'use client' directive for interactive components like the Library page.",
       "createdAt": "2026-04-19T00:00:00.000Z",
       "updatedAt": "2026-04-19T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "b3a3af19-36d3-419e-b8b5-66a174d7d590",
+      "id": "2f731b5a-f80a-4446-bfa6-74543b452965",
       "category": "general",
       "content": "The user is working on a Next.js application located at `c:\\Users\\thear\\OneDrive\\Desktop\\CreateFlow`.",
       "createdAt": "2026-04-18T00:00:00.000Z",
       "updatedAt": "2026-04-18T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "ea5ca09d-3beb-4b7e-9330-5076d78b0908",
+      "id": "b3c8509a-2e22-4957-bc4f-bba09f620ca7",
       "category": "bug-fix",
       "content": "The fix involves a new migration file (`003_fix_signup_trigger.sql`) that safely handles cases where a user row already exists from a previous failed attempt.",
       "createdAt": "2026-04-18T00:00:00.000Z",
       "updatedAt": "2026-04-18T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "7caeb645-9252-4607-b83c-1365931cdeb9",
+      "id": "2a34865d-3560-439f-96e9-0b7b1314e7b0",
       "category": "bug-fix",
       "content": "A bug was identified in the `handle_new_user()` trigger function causing signup failures due to race conditions or duplicate entry errors.",
       "createdAt": "2026-04-18T00:00:00.000Z",
       "updatedAt": "2026-04-18T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "211e47f3-0305-4406-ab23-91103a196097",
+      "id": "c35a8bd7-a1a5-42ca-a4e9-a1c5f7bfb280",
       "category": "general",
       "content": "The project uses Supabase for backend services, specifically relying on database triggers for user creation logic.",
       "createdAt": "2026-04-18T00:00:00.000Z",
       "updatedAt": "2026-04-18T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "60760572-8777-4ad8-bb07-eaad4b7ce230",
+      "id": "2be6b8f4-637c-407e-80ee-49f9546ce48e",
       "category": "general",
       "content": "Authentication pages (sign-in, sign-up, callback) are fully wired to Supabase, enabling secure user management and session handling.",
       "createdAt": "2026-04-18T00:00:00.000Z",
       "updatedAt": "2026-04-18T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "6d86045d-a661-464a-b112-dfe9cda4fa1c",
+      "id": "1b2ec726-cd16-4d7a-8fde-0162b1e4a3aa",
       "category": "general",
       "content": "Recent build fixes resolved type mismatches in the Brands page, API scope errors in enhance-prompt, and Stripe SDK version conflicts.",
       "createdAt": "2026-04-18T00:00:00.000Z",
       "updatedAt": "2026-04-18T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "1f02e4bd-32d5-4cd7-87cd-43aac44512a4",
+      "id": "c28e2d1b-2471-4635-afb3-b07d67454968",
       "category": "general",
       "content": "The database schema consists of 12 tables with Row Level Security (RLS) policies, indexes, and triggers, including an auto-workspace creation migration on user signup.",
       "createdAt": "2026-04-18T00:00:00.000Z",
       "updatedAt": "2026-04-18T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "fdd7bf5f-e8ce-4af3-a21b-c956b6b1ef0e",
+      "id": "5505b5d9-5900-4542-ac40-82a235f91617",
       "category": "general",
       "content": "Localhost requests are blocked by the tooling to prevent access to private/internal addresses, requiring external API calls for development.",
       "createdAt": "2026-04-18T00:00:00.000Z",
       "updatedAt": "2026-04-18T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "6a9d71b5-1f22-4892-9f15-52a7c91cd824",
+      "id": "9ab46c2f-6986-4a69-8bae-fbcfed52c1a9",
       "category": "tool-config",
       "content": "The project uses Next.js with Supabase for backend services and authentication, configured via environment variables including URL, anon key, and service role key.",
       "createdAt": "2026-04-18T00:00:00.000Z",
       "updatedAt": "2026-04-18T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "ad5bcf92-5464-48ac-a2a3-bd0ebaaa6e4e",
+      "id": "a84283ce-0860-4f04-84ee-7b3cde6324df",
       "category": "general",
       "content": "The user prefers precise string matching for file edits, as indicated by errors when whitespace or indentation does not match exactly.",
       "createdAt": "2026-04-18T00:00:00.000Z",
       "updatedAt": "2026-04-18T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "9b2a7142-c544-4dbf-b02d-80c0def2ebf5",
+      "id": "04fa0527-a05a-4d86-8d86-01f2a49c7e2c",
       "category": "general",
       "content": "The database schema includes 12 tables with Row Level Security (RLS) policies, indexes, and triggers, stored in supabase/init.sql.",
       "createdAt": "2026-04-18T00:00:00.000Z",
       "updatedAt": "2026-04-18T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "ef37a1fd-029d-4dde-8161-fe76f230f87b",
+      "id": "f67bf6e5-3037-49ed-b20b-b993d86b89bf",
       "category": "general",
       "content": "The current development focus is on integrating Supabase auth with default workspace creation upon sign-up and connecting workspaces to the dashboard.",
       "createdAt": "2026-04-18T00:00:00.000Z",
       "updatedAt": "2026-04-18T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "8c5b687f-1c4c-417d-982f-f933f70531c1",
+      "id": "4019b2d7-c6ed-4e06-8192-19a325dd75ef",
       "category": "architecture",
       "content": "The project uses pnpm as the package manager and follows a workspace structure with specific build phases including Foundation & Auth, Dashboard, AI Generation Suite, and Credit System.",
       "createdAt": "2026-04-18T00:00:00.000Z",
       "updatedAt": "2026-04-18T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "e5ac14f8-193f-4dd4-bb32-65693c1a730e",
+      "id": "06fa213d-3600-43ee-9dd6-bca2ce25dc5a",
       "category": "general",
       "content": "The user is working on a Next.js project named 'CreateFlow' located at C:\\Users\\thear\\OneDrive\\Desktop\\CreateFlow, utilizing Supabase for authentication and database management.",
       "createdAt": "2026-04-18T00:00:00.000Z",
       "updatedAt": "2026-04-18T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "913d9693-07b4-4674-bb09-c25bb934b31f",
+      "id": "0361f536-9f80-4108-ae2f-a5690124bb56",
       "category": "tool-config",
       "content": "AI generation functionality relies on an Anthropic API key configured in the environment variables.",
       "createdAt": "2026-04-18T00:00:00.000Z",
       "updatedAt": "2026-04-18T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "6053a1eb-363b-485d-b3e8-22160587b91f",
+      "id": "2a03786b-8267-4313-9441-83640873bc09",
       "category": "general",
       "content": "Stripe integration is planned using the SDK, requiring configuration of secret keys, webhook secrets, and publishable keys in the .env.local file.",
       "createdAt": "2026-04-18T00:00:00.000Z",
       "updatedAt": "2026-04-18T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "f8565e3a-7c82-434d-8934-f7b29c946f7b",
+      "id": "bbdf9943-2802-4220-9eb0-2a21526d63bd",
       "category": "tool-config",
       "content": "The project is configured to use Supabase for authentication and database, but placeholder environment variables are currently set and real credentials are required before proceeding.",
       "createdAt": "2026-04-18T00:00:00.000Z",
       "updatedAt": "2026-04-18T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "1f7ff5a3-4521-4a77-a1a9-cf3f47f3bfeb",
+      "id": "c0ff5646-3d29-4138-8d10-c457478bf3b5",
       "category": "bug-fix",
       "content": "The build process currently passes with zero errors after fixing three specific issues: a TypeScript type error in the brands page, a scope error in the enhance-prompt API, and a Stripe version mismatch.",
       "createdAt": "2026-04-18T00:00:00.000Z",
       "updatedAt": "2026-04-18T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "3fc5d89a-409b-4e2d-be8b-36747b256f57",
+      "id": "0e7e6847-26e7-47e6-a5c9-1a407778a489",
       "category": "convention",
       "content": "The project uses Next.js 16.2.4 with Turbopack and has a deprecation warning regarding the 'middleware' file convention, which should be replaced with 'proxy'.",
       "createdAt": "2026-04-18T00:00:00.000Z",
       "updatedAt": "2026-04-18T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "4f9731a5-2223-4b06-aca6-508df5e01798",
+      "id": "9d21eb85-6d2e-4ba4-8900-4584c10f6506",
       "category": "architecture",
       "content": "The app includes a full marketing landing page and a dashboard layout with sidebar navigation.",
       "createdAt": "2026-04-18T00:00:00.000Z",
       "updatedAt": "2026-04-18T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "d403bb14-d64a-46bc-b102-c448fb3eadd1",
+      "id": "5f7e8d5f-caa3-4331-a9b4-f49c66a78199",
       "category": "general",
       "content": "The Content Library page is the most developed feature, supporting folder management, search, type filtering, and grid/list views.",
       "createdAt": "2026-04-18T00:00:00.000Z",
       "updatedAt": "2026-04-18T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "8572fe30-74ff-474f-92f0-a311eea431c8",
+      "id": "3f4360cc-4fae-4832-a8b6-b207d9988f76",
       "category": "tool-config",
       "content": "Supabase is configured for authentication (sign-in/sign-up) but requires backend connection setup.",
       "createdAt": "2026-04-18T00:00:00.000Z",
       "updatedAt": "2026-04-18T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "066b8844-2f95-4496-8e4f-6312c8b31cb8",
+      "id": "5fd9bc44-4bbd-4f18-b24a-18bcb4eb1aaf",
       "category": "general",
       "content": "The application utilizes Lucide-react as the primary icon library for UI elements.",
       "createdAt": "2026-04-18T00:00:00.000Z",
       "updatedAt": "2026-04-18T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "e4f5ba55-4348-4915-9f97-5ccb51d487c7",
+      "id": "4d10e2ed-be7e-4cfd-b639-f25a5d3c3144",
       "category": "general",
       "content": "The project uses React with the 'use client' directive for interactive components like the Library page.",
       "createdAt": "2026-04-18T00:00:00.000Z",
       "updatedAt": "2026-04-18T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     },
     {
-      "id": "f7319a79-52c1-407f-b35e-5b70a9ca4b85",
+      "id": "23edae8a-d5f6-47cb-9236-e4964e1e7ebb",
       "category": "bug-fix",
       "content": "Discovery: Code itself looks correct — the issue is entirely in the configuration between Supabase and Google OAuth.",
       "createdAt": "2026-04-26T00:00:00.000Z",
       "updatedAt": "2026-04-26T00:00:00.000Z",
       "lastRecalledAt": null,
       "recallCount": 0,
-      "archived": false
+      "archived": false,
+      "layer": "project"
     }
   ]
 }
