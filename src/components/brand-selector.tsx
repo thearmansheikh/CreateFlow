@@ -1,10 +1,10 @@
 "use client"
 
-import { useState, useEffect, useRef } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { createClient } from "@/lib/supabase/client"
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
-import { Palette, Loader2 } from "lucide-react"
+import { Palette, Loader2, Star } from "lucide-react"
 
 interface BrandProfile {
   id: string
@@ -15,6 +15,7 @@ interface BrandProfile {
   brand_colors: string[] | null
   typography: { primary_font?: string; secondary_font?: string } | null
   logo_url: string | null
+  is_default?: boolean
 }
 
 interface BrandSelectorProps {
@@ -26,21 +27,37 @@ interface BrandSelectorProps {
 export function BrandSelector({ selectedBrand, onChange, label = "Brand" }: BrandSelectorProps) {
   const [brands, setBrands] = useState<BrandProfile[]>([])
   const [loading, setLoading] = useState(true)
-  const initializedRef = useRef(false)
+
+  // Resolve initial brand: honour explicit selectedBrand, otherwise auto-select default
+  const resolveInitial = useCallback((brandList: BrandProfile[]) => {
+    if (brandList.length === 0) return null
+    if (selectedBrand) return selectedBrand
+    const defaultBrand = brandList.find((b) => b.is_default)
+    if (defaultBrand) {
+      onChange(defaultBrand)
+    }
+    return defaultBrand || null
+  }, [])
 
   useEffect(() => {
+    let cancelled = false
     async function loadBrands() {
       try {
         const supabase = createClient()
         const { data } = await supabase.from("brand_profiles").select("*").order("created_at", { ascending: false })
-        setBrands((data || []) as BrandProfile[])
+        const brandList = (data || []) as BrandProfile[]
+        if (!cancelled) {
+          setBrands(brandList)
+          resolveInitial(brandList)
+        }
       } catch (e) {
         console.error("Failed to load brands:", e)
       } finally {
-        setLoading(false)
+        if (!cancelled) setLoading(false)
       }
     }
     loadBrands()
+    return () => { cancelled = true }
   }, [])
 
   if (loading) {
@@ -101,6 +118,7 @@ export function BrandSelector({ selectedBrand, onChange, label = "Brand" }: Bran
               />
             )}
             {brand.name}
+            {brand.is_default && <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />}
           </button>
         ))}
       </div>
