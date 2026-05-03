@@ -152,15 +152,31 @@ export async function POST(request: NextRequest) {
       .map((block) => (block as any).text)
       .join('\n')
 
-    // Save to generations table
-    await (supabase as any).from('generations').insert({
+    // Save to generation_tasks table
+    const { data: workspaceMember } = await (supabase as any)
+      .from('workspace_members')
+      .select('workspace_id')
+      .eq('user_id', user.id)
+      .single()
+
+    await (supabase as any).from('generation_tasks').insert({
       user_id: user.id,
-      generation_type: 'repurpose',
-      source_type: sourceType,
-      source_content: sourceContent.substring(0, 2000),
+      workspace_id: workspaceMember?.workspace_id ?? null,
+      type: 'copy',
       prompt: `Repurpose ${sourceType} using ${template} template`,
-      output: repurposedContent,
-      metadata: { template, output_format: tpl.outputFormat },
+      status: 'completed',
+      progress: 100,
+      completed_at: new Date().toISOString(),
+      model_used: 'claude-sonnet-4-20250514',
+      credits_used: CREDIT_COSTS.copy,
+      parameters: {
+        kind: 'repurpose',
+        template,
+        output_format: tpl.outputFormat,
+        source_type: sourceType,
+        source_content: sourceContent.substring(0, 2000),
+        output: repurposedContent,
+      },
     })
 
     return NextResponse.json({

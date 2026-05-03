@@ -23,27 +23,29 @@ export async function saveGeneration(input: SaveGenerationInput) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const supabase = await createClient() as any
 
-  // 1. Save to generations table
+  // 1. Save to generation_tasks table
   const { data: generation, error: genError } = await supabase
-    .from('generations')
+    .from('generation_tasks')
     .insert({
       user_id: input.userId,
       workspace_id: input.workspaceId,
       type: input.type,
       prompt: input.prompt,
       model_used: input.modelUsed,
-      output_url: input.outputUrl,
-      output_text: input.outputText,
-      brand_profile_id: input.brandProfileId,
-      folder_id: input.folderId,
-      tags: input.tags,
+      result_url: input.outputUrl,
       status: 'completed',
+      progress: 100,
+      completed_at: new Date().toISOString(),
       parameters: {
         width: input.width,
         height: input.height,
         duration: input.duration,
         mime_type: input.mimeType,
         file_size: input.fileSize,
+        output_text: input.outputText,
+        brand_profile_id: input.brandProfileId,
+        folder_id: input.folderId,
+        tags: input.tags,
       },
     })
     .select()
