@@ -9,7 +9,7 @@ const plans = [
   {
     name: "Free",
     icon: Sparkles,
-    price: "\u00A30",
+    price: "$0",
     description: "50 credits \u2014 perfect for trying out CreateFlow",
     features: [
       "50 credits on signup",
@@ -25,7 +25,7 @@ const plans = [
   {
     name: "Pro",
     icon: Zap,
-    price: "\u00A34.99",
+    price: "$4.99",
     period: "/month",
     description: "For serious content creators",
     features: [
@@ -35,10 +35,9 @@ const plans = [
       "5 brand profiles",
       "Content scheduling",
       "Repurpose engine",
-      "No watermarks",
       "Priority support",
     ],
-    cta: "Start for \u00A34.99",
+    cta: "Start for $4.99",
     popular: true,
     launchPrice: true,
   },
@@ -63,12 +62,11 @@ const plans = [
 ]
 
 const creditBreakdown = [
-  { action: "Generate an image", cost: "1 credit" },
+  { action: "Generate an image", cost: "3 credits" },
   { action: "Write social copy", cost: "1 credit" },
-  { action: "Generate a video clip", cost: "10 credits" },
-  { action: "Generate a music track", cost: "20 credits" },
-  { action: "Repurpose content", cost: "2 credits" },
-  { action: "Schedule & publish", cost: "1 credit" },
+  { action: "Generate a video clip", cost: "5 credits" },
+  { action: "Generate a music track", cost: "3 credits" },
+  { action: "Repurpose content", cost: "1 credit" },
 ]
 
 const containerVariants = {
@@ -115,7 +113,7 @@ export default function PricingSection() {
             Start free, scale as you grow. No hidden fees, cancel anytime.
           </p>
           <p className="mt-2 text-sm text-muted-foreground">
-            All prices shown in GBP. Your card will be billed in USD at the current exchange rate.
+            All prices shown in USD.
           </p>
         </motion.div>
 
