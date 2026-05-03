@@ -14,13 +14,36 @@ export default function SignUpPage() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    confirmPassword: "",
     fullName: "",
+    // Honeypot — bots fill it, humans never see it.
+    website: "",
   })
+  const [acceptedTerms, setAcceptedTerms] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError(null)
+
+    if (formData.website) {
+      // Bot caught — fail silently (don't tell them why).
+      setLoading(false)
+      setSuccess(true)
+      return
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords don't match")
+      setLoading(false)
+      return
+    }
+
+    if (!acceptedTerms) {
+      setError("You must agree to the Terms and Privacy Policy")
+      setLoading(false)
+      return
+    }
 
     try {
       const supabase = createClient()
@@ -40,8 +63,9 @@ export default function SignUpPage() {
       if (data.user) {
         setSuccess(true)
       }
-    } catch (err: any) {
-      setError(err.message || "An error occurred during sign up")
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "An error occurred during sign up"
+      setError(msg)
     } finally {
       setLoading(false)
     }
@@ -62,8 +86,9 @@ export default function SignUpPage() {
       })
 
       if (error) throw error
-    } catch (err: any) {
-      setError(err.message || "An error occurred during Google sign up")
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "An error occurred during Google sign up"
+      setError(msg)
       setLoading(false)
     }
   }
@@ -176,9 +201,58 @@ export default function SignUpPage() {
                 className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-all"
                 placeholder="••••••••"
                 required
-                minLength={6}
+                minLength={8}
+                autoComplete="new-password"
+              />
+              <p className="mt-1 text-xs text-slate-500">At least 8 characters.</p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-2">
+                Confirm password
+              </label>
+              <input
+                type="password"
+                value={formData.confirmPassword}
+                onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                className="w-full px-4 py-3 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500 transition-all"
+                placeholder="••••••••"
+                required
+                minLength={8}
+                autoComplete="new-password"
               />
             </div>
+
+            {/* Honeypot — visually hidden but crawlable by bots */}
+            <div aria-hidden="true" style={{ position: "absolute", left: "-9999px", top: "auto", width: 1, height: 1, overflow: "hidden" }}>
+              <label>
+                Website (leave blank)
+                <input
+                  type="text"
+                  name="website"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={formData.website}
+                  onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+                />
+              </label>
+            </div>
+
+            <label className="flex items-start gap-3 text-sm text-slate-300 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={acceptedTerms}
+                onChange={(e) => setAcceptedTerms(e.target.checked)}
+                className="mt-0.5 h-4 w-4 rounded border-slate-700 bg-slate-800 text-purple-500 focus:ring-purple-500"
+                required
+              />
+              <span>
+                I agree to the{" "}
+                <Link href="/terms" className="text-purple-400 hover:text-purple-300 underline">Terms of Service</Link>{" "}
+                and{" "}
+                <Link href="/privacy" className="text-purple-400 hover:text-purple-300 underline">Privacy Policy</Link>.
+              </span>
+            </label>
 
             <button
               type="submit"

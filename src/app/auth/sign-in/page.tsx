@@ -31,8 +31,9 @@ export default function SignInPage() {
       if (error) throw error
 
       router.push("/dashboard")
-    } catch (err: any) {
-      setError(err.message || "An error occurred during sign in")
+    } catch {
+      // Generic message — never reveal whether email exists.
+      setError("Invalid email or password.")
     } finally {
       setLoading(false)
     }
@@ -53,8 +54,9 @@ export default function SignInPage() {
       })
 
       if (error) throw error
-    } catch (err: any) {
-      setError(err.message || "An error occurred during Google sign in")
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "An error occurred during Google sign in"
+      setError(msg)
       setLoading(false)
     }
   }
