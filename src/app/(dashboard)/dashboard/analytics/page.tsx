@@ -5,11 +5,9 @@ import { Badge } from "@/components/ui/badge"
 import { ArrowUp, BarChart3, TrendingUp, Activity } from "lucide-react"
 import { AnalyticsChart } from "./analytics-chart"
 
-type Params = Promise<{ workspace: string }>
 type SearchParams = Promise<{ range?: string }>
 
-export default async function AnalyticsPage(props: { params: Params; searchParams: SearchParams }) {
-  const params = await props.params
+export default async function AnalyticsPage(props: { searchParams: SearchParams }) {
   const searchParams = await props.searchParams
 
   const supabase = await createClient()
@@ -18,14 +16,21 @@ export default async function AnalyticsPage(props: { params: Params; searchParam
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (!user) redirect("/login")
+  if (!user) redirect("/auth/sign-in")
+
+  const { data: member } = await supabase
+    .from("workspace_members")
+    .select("workspace_id")
+    .eq("user_id", user.id)
+    .single() as unknown as { data: { workspace_id: string } | null }
+
+  if (!member?.workspace_id) redirect("/dashboard")
+  const workspaceId = member.workspace_id
 
   const range = searchParams.range ?? "30"
   const daysAgo = new Date()
   daysAgo.setDate(daysAgo.getDate() - parseInt(range, 10))
   const since = daysAgo.toISOString()
-
-  const workspaceId = params.workspace
 
   // --- Content metrics ---
   const { count: totalContent } = await supabase
@@ -54,7 +59,7 @@ export default async function AnalyticsPage(props: { params: Params; searchParam
 
   const { data: genTasksRaw } = await supabase
     .from("generation_tasks")
-    .select("status, model_used, type, tokens_used")
+    .select("status, model_used, type, credits_used")
     .eq("workspace_id", workspaceId)
     .gte("created_at", since)
 
