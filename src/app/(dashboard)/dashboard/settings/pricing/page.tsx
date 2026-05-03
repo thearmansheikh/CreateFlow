@@ -21,9 +21,8 @@ const plans = [
       "Content library (100 items)",
       "1 brand profile",
       "Basic analytics",
-      "Watermarked exports",
     ],
-    priceId: null,
+    isSubscription: false,
     popular: false,
   },
   {
@@ -42,10 +41,9 @@ const plans = [
       "5 brand profiles",
       "Schedule to all platforms",
       "Repurpose engine",
-      "No watermarks",
       "Priority support",
     ],
-    priceId: "price_pro_monthly",
+    isSubscription: true,
     popular: true,
   },
   {
@@ -66,7 +64,7 @@ const plans = [
       "Dedicated support",
       "SLA guarantee",
     ],
-    priceId: null,
+    isSubscription: false,
     popular: false,
   },
 ]
@@ -74,21 +72,20 @@ const plans = [
 export default function PricingPage() {
   const [loading, setLoading] = useState<string | null>(null)
 
-  const handleSubscribe = async (priceId: string | null, planName: string) => {
-    if (!priceId) {
-      // Free or Business plan
+  const handleSubscribe = async (isSubscription: boolean, planName: string) => {
+    if (!isSubscription) {
       if (planName === "Business") {
         window.location.href = "mailto:hello@thearmansheikh.co?subject=CreateFlow%20Business%20Plan%20Inquiry"
       }
       return
     }
 
-    setLoading(priceId)
+    setLoading(planName)
     try {
       const res = await fetch("/api/stripe/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "subscription", priceId }),
+        body: JSON.stringify({ type: "subscription" }),
       })
       const data = await res.json()
       if (data.checkoutUrl) window.location.href = data.checkoutUrl
@@ -143,17 +140,17 @@ export default function PricingPage() {
               <Button
                 className="w-full"
                 variant={plan.popular ? "default" : "outline"}
-                onClick={() => handleSubscribe(plan.priceId, plan.name)}
-                disabled={loading === plan.priceId}
+                onClick={() => handleSubscribe(plan.isSubscription, plan.name)}
+                disabled={loading === plan.name}
               >
-                {loading === plan.priceId ? (
+                {loading === plan.name ? (
                   "Redirecting..."
                 ) : plan.name === "Business" ? (
                   <>
                     <Mail className="mr-2 h-4 w-4" />
                     Contact Sales
                   </>
-                ) : plan.priceId ? (
+                ) : plan.isSubscription ? (
                   "Get Started"
                 ) : (
                   "Start Free"

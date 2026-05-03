@@ -75,22 +75,39 @@ export async function POST(request: NextRequest) {
 
       const { data: userProfile } = await supabase
         .from('users')
-        .select('email')
+        .select('email, stripe_customer_id')
         .eq('id', user.id)
-        .single() as any
+        .single() as unknown as {
+          data: { email: string | null; stripe_customer_id: string | null } | null
+        }
 
-      const customer = await stripe.customers.create({
-        email: (userProfile as any)?.email || user.email,
-        metadata: { userId: user.id },
-      })
+      let customerId = userProfile?.stripe_customer_id ?? null
+      if (!customerId) {
+        const customer = await stripe.customers.create({
+          email: userProfile?.email || user.email || undefined,
+          metadata: { userId: user.id },
+        })
+        customerId = customer.id
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        await (supabase as any)
+          .from('users')
+          .update({ stripe_customer_id: customerId })
+          .eq('id', user.id)
+      }
 
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         mode: 'subscription',
-        customer: customer.id,
+        customer: customerId,
         line_items: [{ price: PRO_PRICE_ID, quantity: 1 }],
         success_url: `${NEXT_URL}/dashboard/credits?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${NEXT_URL}/dashboard/credits`,
+        // userId is needed on the *subscription* itself so that renewal /
+        // cancellation webhooks (which give us the subscription, not the session)
+        // can find the right user.
+        subscription_data: {
+          metadata: { userId: user.id },
+        },
         metadata: {
           userId: user.id,
           type: 'subscription',

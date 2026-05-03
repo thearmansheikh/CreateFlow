@@ -2,14 +2,17 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { CreditCard, ArrowRight, Check, Zap, Mail, Clock } from "lucide-react"
-import { useState } from "react"
+import { CreditCard, ArrowRight, Check, Zap, Mail, Clock, Settings } from "lucide-react"
+import { useEffect, useState } from "react"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
+
+type Tier = "free" | "pro" | "business" | "enterprise"
 
 const tiers = [
   {
     name: "Free",
+    tierKey: "free" as Tier,
     price: "$0",
     credits: 50,
     description: "Try CreateFlow with 50 free credits",
@@ -21,11 +24,11 @@ const tiers = [
       "1 brand profile",
       "Basic analytics",
     ],
-    priceId: null,
-    current: true,
+    isSubscription: false,
   },
   {
     name: "Pro",
+    tierKey: "pro" as Tier,
     price: "$4.99",
     credits: 500,
     description: "For solo content creators",
@@ -36,14 +39,14 @@ const tiers = [
       "5 brand profiles",
       "Content scheduling",
       "Repurpose engine",
-      "No watermarks",
       "Priority support",
     ],
-    priceId: "price_pro_monthly",
+    isSubscription: true,
     highlight: true,
   },
   {
     name: "Business",
+    tierKey: "business" as Tier,
     price: "Custom",
     credits: "∞",
     description: "For teams and agencies",
@@ -58,25 +61,36 @@ const tiers = [
       "Dedicated support",
       "SLA guarantee",
     ],
-    priceId: null,
+    isSubscription: false,
   },
 ]
 
 export default function BillingPage() {
   const [loading, setLoading] = useState<string | null>(null)
+  const [currentTier, setCurrentTier] = useState<Tier>("free")
 
-  const handleUpgrade = async (priceId: string | null) => {
-    if (!priceId) {
+  useEffect(() => {
+    fetch("/api/me")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data?.subscription_tier) setCurrentTier(data.subscription_tier as Tier)
+      })
+      .catch(() => {})
+  }, [])
+
+  const handleSubscribe = async (tierKey: Tier) => {
+    if (tierKey === "business") {
       window.location.href = "mailto:hello@thearmansheikh.co?subject=CreateFlow%20Business%20Plan%20Inquiry"
       return
     }
+    if (tierKey !== "pro") return
 
-    setLoading(priceId)
+    setLoading(tierKey)
     try {
       const res = await fetch("/api/stripe/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "subscription", priceId }),
+        body: JSON.stringify({ type: "subscription" }),
       })
       const data = await res.json()
       if (data.checkoutUrl) window.location.href = data.checkoutUrl
@@ -87,73 +101,104 @@ export default function BillingPage() {
     }
   }
 
+  const handleManage = async () => {
+    setLoading("portal")
+    try {
+      const res = await fetch("/api/stripe/portal", { method: "POST" })
+      const data = await res.json()
+      if (data.portalUrl) window.location.href = data.portalUrl
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setLoading(null)
+    }
+  }
+
   return (
     <div className="flex-1 space-y-8 p-6 lg:p-8">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Billing & Credits</h1>
-        <p className="mt-1 text-muted-foreground">Manage your subscription and credit balance.</p>
+      <div className="flex items-start justify-between gap-4 flex-wrap">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">Billing & Credits</h1>
+          <p className="mt-1 text-muted-foreground">Manage your subscription and credit balance.</p>
+        </div>
+        {currentTier === "pro" && (
+          <Button variant="outline" onClick={handleManage} disabled={loading === "portal"}>
+            <Settings className="mr-2 h-4 w-4" />
+            {loading === "portal" ? "Opening..." : "Manage Subscription"}
+          </Button>
+        )}
       </div>
 
       <div className="grid gap-6 md:grid-cols-3">
-        {tiers.map((tier) => (
-          <Card
-            key={tier.name}
-            className={cn(
-              "relative",
-              tier.highlight && "border-primary shadow-lg shadow-primary/10"
-            )}
-          >
-            {tier.highlight && (
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground">
-                Most Popular
-              </div>
-            )}
-            <CardHeader>
-              <CardTitle>{tier.name}</CardTitle>
-              <CardDescription>{tier.description}</CardDescription>
-              <div>
-                <span className="text-3xl font-bold">{tier.price}</span>
-                {tier.price !== "$0" && tier.price !== "Custom" && (
-                  <span className="text-sm text-muted-foreground">/month</span>
-                )}
-              </div>
-              <p className="text-sm text-muted-foreground">{tier.credits} credits</p>
-            </CardHeader>
-            <CardContent>
-              <ul className="mb-6 space-y-2">
-                {tier.features.map((f) => (
-                  <li key={f} className="flex items-center gap-2 text-sm">
-                    <Check className="h-4 w-4 text-primary shrink-0" />
-                    {f}
-                  </li>
-                ))}
-              </ul>
-              {tier.current ? (
-                <Button variant="outline" className="w-full" disabled>
-                  Current Plan
-                </Button>
-              ) : (
-                <Button
-                  className="w-full"
-                  onClick={() => handleUpgrade(tier.priceId)}
-                  disabled={loading === tier.priceId}
-                >
-                  {loading === tier.priceId ? (
-                    "Redirecting..."
-                  ) : tier.name === "Business" ? (
-                    <>
-                      <Mail className="mr-2 h-4 w-4" />
-                      Contact Sales
-                    </>
-                  ) : (
-                    `Upgrade to ${tier.name}`
-                  )}
-                  <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
+        {tiers.map((tier) => {
+          const isCurrent = tier.tierKey === currentTier
+          return (
+            <Card
+              key={tier.name}
+              className={cn(
+                "relative",
+                tier.highlight && "border-primary shadow-lg shadow-primary/10"
               )}
-            </CardContent>
-          </Card>
-        ))}
+            >
+              {tier.highlight && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-1 text-xs font-medium text-primary-foreground">
+                  Most Popular
+                </div>
+              )}
+              <CardHeader>
+                <CardTitle>{tier.name}</CardTitle>
+                <CardDescription>{tier.description}</CardDescription>
+                <div>
+                  <span className="text-3xl font-bold">{tier.price}</span>
+                  {tier.price !== "$0" && tier.price !== "Custom" && (
+                    <span className="text-sm text-muted-foreground">/month</span>
+                  )}
+                </div>
+                <p className="text-sm text-muted-foreground">{tier.credits} credits</p>
+              </CardHeader>
+              <CardContent>
+                <ul className="mb-6 space-y-2">
+                  {tier.features.map((f) => (
+                    <li key={f} className="flex items-center gap-2 text-sm">
+                      <Check className="h-4 w-4 text-primary shrink-0" />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                {isCurrent ? (
+                  tier.tierKey === "pro" ? (
+                    <Button variant="outline" className="w-full" onClick={handleManage} disabled={loading === "portal"}>
+                      <Settings className="mr-2 h-4 w-4" />
+                      {loading === "portal" ? "Opening..." : "Manage"}
+                    </Button>
+                  ) : (
+                    <Button variant="outline" className="w-full" disabled>
+                      Current Plan
+                    </Button>
+                  )
+                ) : (
+                  <Button
+                    className="w-full"
+                    onClick={() => handleSubscribe(tier.tierKey)}
+                    disabled={loading === tier.tierKey}
+                  >
+                    {loading === tier.tierKey ? (
+                      "Redirecting..."
+                    ) : tier.tierKey === "business" ? (
+                      <>
+                        <Mail className="mr-2 h-4 w-4" />
+                        Contact Sales
+                      </>
+                    ) : (
+                      `Upgrade to ${tier.name}`
+                    )}
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                )}
+              </CardContent>
+            </Card>
+          )
+        })}
       </div>
 
       {/* Credit costs */}
