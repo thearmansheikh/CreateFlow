@@ -4,6 +4,8 @@ import { createClient } from "@/lib/supabase/server"
 import { deductCredits, CREDIT_COSTS } from "@/lib/credits"
 import { saveGeneration } from "@/lib/save-generation"
 import { buildVisualBrandContext, type FullBrandContext } from "@/lib/brand-context"
+import { checkGenerationLimit } from "@/lib/rate-limit"
+import { logger } from "@/lib/log"
 
 const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
@@ -11,12 +13,8 @@ const replicate = new Replicate({
 })
 
 export async function POST(req: NextRequest) {
-  console.log("=== IMAGE GEN ROUTE STARTED ===")
-
   try {
     const body = await req.json()
-    console.log("Request body:", JSON.stringify(body, null, 2))
-
     const { prompt, aspectRatio, style, numOutputs = 1, workspaceId, brandContext, brandProfile } = body
 
     if (!prompt) {
@@ -28,6 +26,11 @@ export async function POST(req: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    }
+
+    const limit = checkGenerationLimit(user.id)
+    if (!limit.ok) {
+      return NextResponse.json(limit.body, { status: limit.status, headers: limit.headers })
     }
 
     // Deduct credits before generating
@@ -65,8 +68,12 @@ export async function POST(req: NextRequest) {
     }
     const dim = dimensions[aspectRatio] || dimensions["1:1"]
 
-    console.log("Calling Replicate with prompt:", enhancedPrompt)
-    console.log("Dimensions:", dim.width, "x", dim.height)
+    logger.debug("image generation start", {
+      aspectRatio,
+      width: dim.width,
+      height: dim.height,
+      numOutputs,
+    })
 
     const output = await replicate.run(
       "black-forest-labs/flux-schnell",
@@ -79,9 +86,6 @@ export async function POST(req: NextRequest) {
         },
       }
     )
-
-    console.log("Raw Replicate output type:", typeof output)
-    console.log("Raw output (first 200 chars):", JSON.stringify(output).slice(0, 200))
 
     // Normalize
     const images: string[] = Array.isArray(output)
@@ -96,7 +100,7 @@ export async function POST(req: NextRequest) {
         ? [output]
         : []
 
-    console.log("Normalized images:", images)
+    logger.debug("image generation complete", { count: images.length })
 
     // Save to database
     await saveGeneration({
@@ -120,13 +124,9 @@ export async function POST(req: NextRequest) {
       balance: creditResult.balanceAfter,
       enhancedPrompt: enhancedPrompt !== prompt ? enhancedPrompt : undefined,
     })
-  } catch (error: any) {
-    console.error("=== IMAGE GEN ERROR ===")
-    console.error("Error:", error.message)
-    console.error("Stack:", error.stack)
-    return NextResponse.json(
-      { error: error.message || "Failed to generate image" },
-      { status: 500 }
-    )
+  } catch (error) {
+    logger.error("image generation failed", error)
+    const message = error instanceof Error ? error.message : "Failed to generate image"
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }

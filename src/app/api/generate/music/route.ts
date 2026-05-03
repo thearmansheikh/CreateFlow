@@ -3,6 +3,8 @@ import { createClient } from '@/lib/supabase/server'
 import { deductCredits, CREDIT_COSTS } from '@/lib/credits'
 import { saveGeneration } from '@/lib/save-generation'
 import { buildVoiceBrandContext, type FullBrandContext } from '@/lib/brand-context'
+import { checkGenerationLimit } from '@/lib/rate-limit'
+import { logger } from '@/lib/log'
 
 const BASE_URL = 'https://api.minimax.io'
 const API_KEY = process.env.MINIMAX_API_KEY
@@ -26,6 +28,11 @@ export async function POST(request: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const limit = checkGenerationLimit(user.id)
+    if (!limit.ok) {
+      return NextResponse.json(limit.body, { status: limit.status, headers: limit.headers })
     }
 
     // Deduct credits before generating
@@ -116,11 +123,9 @@ export async function POST(request: NextRequest) {
       creditsUsed: CREDIT_COSTS.music,
       balance: creditResult.balanceAfter,
     })
-  } catch (error: any) {
-    console.error('Music generation error:', error)
-    return NextResponse.json(
-      { error: error.message || 'Failed to generate music' },
-      { status: 500 }
-    )
+  } catch (error) {
+    logger.error('music generation failed', error)
+    const message = error instanceof Error ? error.message : 'Failed to generate music'
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }

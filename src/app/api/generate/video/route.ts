@@ -3,6 +3,8 @@ import { createClient } from '@/lib/supabase/server'
 import { deductCredits, CREDIT_COSTS } from '@/lib/credits'
 import { saveGeneration } from '@/lib/save-generation'
 import { buildVisualBrandContext, type FullBrandContext } from '@/lib/brand-context'
+import { checkGenerationLimit } from '@/lib/rate-limit'
+import { logger } from '@/lib/log'
 
 const BASE_URL = 'https://api.minimax.io'
 const API_KEY = process.env.MINIMAX_API_KEY
@@ -87,6 +89,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    const limit = checkGenerationLimit(user.id)
+    if (!limit.ok) {
+      return NextResponse.json(limit.body, { status: limit.status, headers: limit.headers })
+    }
+
     // Deduct credits before creating task
     const creditResult = await deductCredits(user.id, 'video')
     if (!creditResult.success) {
@@ -99,7 +106,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: base_resp.status_msg || 'Failed to create video task' }, { status: 500 })
     }
 
-    console.log(`[MiniMax Video] Task created: ${task_id}`)
+    logger.debug('video task created', { taskId: task_id })
 
 
     // Save generation record (processing)
@@ -119,12 +126,10 @@ export async function POST(request: NextRequest) {
       creditsUsed: CREDIT_COSTS.video,
       balance: creditResult.balanceAfter,
     })
-  } catch (error: any) {
-    console.error('Video generation error:', error)
-    return NextResponse.json(
-      { error: error.message || 'Failed to generate video' },
-      { status: 500 }
-    )
+  } catch (error) {
+    logger.error('video generation failed', error)
+    const message = error instanceof Error ? error.message : 'Failed to generate video'
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }
 export async function GET(request: NextRequest) {
@@ -167,11 +172,9 @@ export async function GET(request: NextRequest) {
       status: 'processing',
       progress: result.progress || 0,
     })
-  } catch (error: any) {
-    console.error('Video query error:', error)
-    return NextResponse.json(
-      { error: error.message || 'Failed to query video task' },
-      { status: 500 }
-    )
+  } catch (error) {
+    logger.error('video query failed', error)
+    const message = error instanceof Error ? error.message : 'Failed to query video task'
+    return NextResponse.json({ error: message }, { status: 500 })
   }
 }

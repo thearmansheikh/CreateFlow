@@ -4,6 +4,8 @@ import { createClient } from '@/lib/supabase/server'
 import { deductCredits, CREDIT_COSTS } from '@/lib/credits'
 import { saveGeneration } from '@/lib/save-generation'
 import { buildVoiceBrandContext, type FullBrandContext } from '@/lib/brand-context'
+import { checkGenerationLimit } from '@/lib/rate-limit'
+import { logger } from '@/lib/log'
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -31,6 +33,11 @@ export async function POST(request: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const limit = checkGenerationLimit(user.id)
+    if (!limit.ok) {
+      return NextResponse.json(limit.body, { status: limit.status, headers: limit.headers })
     }
 
     // Deduct credits
