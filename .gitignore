@@ -17,3 +17,7 @@ next-env.d.ts
 # Decisions/
 
 .vercel
+
+# Local agent / IDE state — not source code
+.ava/
+.claude/
