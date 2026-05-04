@@ -80,6 +80,14 @@ export async function POST(request: NextRequest) {
           data: { stripe_customer_id: string | null } | null
         }
 
+      console.log('[checkout] state', {
+        userId: user.id,
+        userEmail: user.email,
+        dbCustomerId: userProfile?.stripe_customer_id,
+        keyMode: process.env.STRIPE_SECRET_KEY?.startsWith('sk_test_') ? 'test' : 'live',
+        priceId: process.env.STRIPE_PRO_PRICE_ID,
+      })
+
       let customerId = userProfile?.stripe_customer_id ?? null
       if (!customerId) {
         const customer = await stripe.customers.create({
@@ -87,12 +95,14 @@ export async function POST(request: NextRequest) {
           metadata: { userId: user.id },
         })
         customerId = customer.id
+        console.log('[checkout] created customer', { customerId })
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         await (supabase as any)
           .from('users')
           .update({ stripe_customer_id: customerId })
           .eq('id', user.id)
       }
+      console.log('[checkout] using customer', { customerId })
 
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
