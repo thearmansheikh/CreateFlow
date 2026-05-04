@@ -117,10 +117,17 @@ export async function POST(request: NextRequest) {
     }
 
     return NextResponse.json({ error: 'Invalid purchase type' }, { status: 400 })
-  } catch (error: any) {
-    console.error('Checkout error:', error)
+  } catch (error) {
+    const stripeErr = error as { message?: string; code?: string; type?: string; param?: string; statusCode?: number }
+    console.error('[checkout] FAILED', {
+      message: stripeErr.message,
+      code: stripeErr.code,
+      type: stripeErr.type,
+      param: stripeErr.param,
+      statusCode: stripeErr.statusCode,
+    })
     return NextResponse.json(
-      { error: error.message || 'Failed to create checkout session' },
+      { error: stripeErr.message || 'Failed to create checkout session', code: stripeErr.code },
       { status: 500 }
     )
   }
