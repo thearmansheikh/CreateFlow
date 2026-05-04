@@ -1,20 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getStripe } from '@/lib/stripe'
 import { addCredits } from '@/lib/credits'
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import type Stripe from 'stripe'
 
 async function setSubscriptionTier(
   userId: string,
   tier: 'free' | 'pro' | 'business' | 'enterprise',
 ) {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   await (supabase as any).from('users').update({ subscription_tier: tier }).eq('id', userId)
 }
 
 async function persistStripeCustomer(userId: string, customerId: string) {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   await (supabase as any).from('users').update({ stripe_customer_id: customerId }).eq('id', userId)
 }
@@ -28,7 +28,7 @@ async function upsertSubscription(params: {
   currentPeriodEnd: number | null
   cancelAtPeriodEnd: boolean
 }) {
-  const supabase = await createClient()
+  const supabase = createAdminClient()
   const { data: member } = await supabase
     .from('workspace_members')
     .select('workspace_id')

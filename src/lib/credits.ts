@@ -1,4 +1,5 @@
 import { createClient } from './supabase/server'
+import { createAdminClient } from './supabase/admin'
 
 export type GenerationType = 'image' | 'video' | 'music' | 'copy'
 
@@ -91,7 +92,9 @@ export async function addCredits(
   stripePaymentId?: string,
   type: 'purchase' | 'bonus' | 'refund' | 'trial' = 'purchase'
 ): Promise<boolean> {
-  const supabase = await createClient()
+  // Use admin client: addCredits is called from webhooks (no user cookies)
+  // and from authenticated routes that have already verified ownership.
+  const supabase = createAdminClient()
 
   const { data: member } = await supabase
     .from('workspace_members')
