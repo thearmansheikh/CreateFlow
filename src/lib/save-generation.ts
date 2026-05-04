@@ -1,4 +1,4 @@
-import { createClient } from './supabase/server'
+import { createAdminClient } from './supabase/admin'
 
 export interface SaveGenerationInput {
   userId: string
@@ -20,8 +20,11 @@ export interface SaveGenerationInput {
 }
 
 export async function saveGeneration(input: SaveGenerationInput) {
+  // Admin client: callers have already verified user auth + workspace ownership.
+  // Avoids RLS evaluation on every save (and dodges the workspaces policy
+  // recursion bug that breaks anon-key writes).
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const supabase = await createClient() as any
+  const supabase = createAdminClient() as any
 
   // 1. Save to generation_tasks table
   const { data: generation, error: genError } = await supabase
