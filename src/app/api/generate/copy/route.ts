@@ -64,8 +64,10 @@ ${!richBrandContext ? `Tone: ${tone}.` : tone !== 'professional' ? `Tone should 
 Keep responses under ${maxLength} characters unless the type requires longer content.`
 
     const message = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-sonnet-4-6',
       max_tokens: Math.min(maxLength + 200, 4000),
+      thinking: { type: 'disabled' },
+      output_config: { effort: 'low' },
       system: systemPrompt,
       messages: [
         { role: 'user', content: `Write a ${type} for the following: ${prompt}` },
@@ -87,14 +89,14 @@ Keep responses under ${maxLength} characters unless the type requires longer con
       title,
       prompt,
       outputText: content,
-      modelUsed: 'claude-sonnet-4-20250514',
+      modelUsed: 'claude-sonnet-4-6',
       mimeType: 'text/plain',
     })
 
     return NextResponse.json({
       success: true,
       content,
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-sonnet-4-6',
       creditsUsed: CREDIT_COSTS.copy,
       balance: creditResult.balanceAfter,
     })

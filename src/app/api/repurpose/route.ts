@@ -144,8 +144,10 @@ export async function POST(request: NextRequest) {
 
     // Call Claude to repurpose
     const message = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-sonnet-4-6',
       max_tokens: 4096,
+      thinking: { type: 'disabled' },
+      output_config: { effort: 'low' },
       system: systemPrompt,
       messages: [
         {
@@ -175,7 +177,7 @@ export async function POST(request: NextRequest) {
       status: 'completed',
       progress: 100,
       completed_at: new Date().toISOString(),
-      model_used: 'claude-sonnet-4-20250514',
+      model_used: 'claude-sonnet-4-6',
       credits_used: CREDIT_COSTS.copy,
       parameters: {
         kind: 'repurpose',

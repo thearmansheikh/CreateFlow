@@ -32,8 +32,10 @@ Enhance the user's prompt by incorporating these brand characteristics into the 
 Make the prompt more detailed and brand-aligned. Return ONLY the enhanced prompt, nothing else.`
 
     const message = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
+      model: 'claude-sonnet-4-6',
       max_tokens: 500,
+      thinking: { type: 'disabled' },
+      output_config: { effort: 'low' },
       system: brandInstructions,
       messages: [
         { role: 'user', content: `Enhance this ${type} generation prompt for my brand: ${prompt}` },
