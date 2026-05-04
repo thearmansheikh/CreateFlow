@@ -19,6 +19,13 @@ async function persistStripeCustomer(userId: string, customerId: string) {
   await (supabase as any).from('users').update({ stripe_customer_id: customerId }).eq('id', userId)
 }
 
+// The Stripe Customer Portal uses `cancel_at` (timestamp) for scheduled
+// cancellations; the legacy boolean `cancel_at_period_end` is left false.
+// Treat either as a pending cancellation.
+function isCancelScheduled(sub: { cancel_at_period_end?: boolean | null; cancel_at?: number | null }): boolean {
+  return Boolean(sub.cancel_at_period_end) || (typeof sub.cancel_at === 'number' && sub.cancel_at > 0)
+}
+
 async function upsertSubscription(params: {
   userId: string
   stripeCustomerId: string
@@ -137,7 +144,7 @@ export async function POST(request: NextRequest) {
             status: sub.status,
             currentPeriodStart: (sub as unknown as { current_period_start: number }).current_period_start,
             currentPeriodEnd: (sub as unknown as { current_period_end: number }).current_period_end,
-            cancelAtPeriodEnd: sub.cancel_at_period_end,
+            cancelAtPeriodEnd: isCancelScheduled(sub),
           })
         }
 
@@ -176,7 +183,7 @@ export async function POST(request: NextRequest) {
             status: sub.status,
             currentPeriodStart: (sub as unknown as { current_period_start: number }).current_period_start,
             currentPeriodEnd: (sub as unknown as { current_period_end: number }).current_period_end,
-            cancelAtPeriodEnd: sub.cancel_at_period_end,
+            cancelAtPeriodEnd: isCancelScheduled(sub),
           })
           await setSubscriptionTier(userId, 'pro')
           await addCredits(
@@ -244,7 +251,7 @@ export async function POST(request: NextRequest) {
             status: sub.status,
             currentPeriodStart: (sub as unknown as { current_period_start: number }).current_period_start,
             currentPeriodEnd: (sub as unknown as { current_period_end: number }).current_period_end,
-            cancelAtPeriodEnd: sub.cancel_at_period_end,
+            cancelAtPeriodEnd: isCancelScheduled(sub),
           })
         }
       }
