@@ -26,12 +26,31 @@ export async function saveGeneration(input: SaveGenerationInput) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const supabase = createAdminClient() as any
 
+  // Resolve workspace_id if the caller didn't pass one. Some client code
+  // paths submit generations before the workspace selector has hydrated;
+  // generation_tasks.workspace_id is NOT NULL so we'd fail the insert.
+  let workspaceId = input.workspaceId
+  if (!workspaceId) {
+    const { data: member } = await supabase
+      .from('workspace_members')
+      .select('workspace_id')
+      .eq('user_id', input.userId)
+      .order('created_at', { ascending: true })
+      .limit(1)
+      .maybeSingle()
+    if (!member?.workspace_id) {
+      console.error('Generation save: no workspace for user', input.userId)
+      return { success: false, error: 'No workspace found for user' }
+    }
+    workspaceId = member.workspace_id
+  }
+
   // 1. Save to generation_tasks table
   const { data: generation, error: genError } = await supabase
     .from('generation_tasks')
     .insert({
       user_id: input.userId,
-      workspace_id: input.workspaceId,
+      workspace_id: workspaceId,
       type: input.type,
       prompt: input.prompt,
       model_used: input.modelUsed,
@@ -71,7 +90,7 @@ export async function saveGeneration(input: SaveGenerationInput) {
     .from('content_items')
     .insert({
       user_id: input.userId,
-      workspace_id: input.workspaceId,
+      workspace_id: workspaceId,
       type: contentTypes[input.type] ?? 'upload',
       title: input.title,
       description: input.prompt,
