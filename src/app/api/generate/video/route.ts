@@ -5,6 +5,7 @@ import { saveGeneration } from '@/lib/save-generation'
 import { buildVisualBrandContext, type FullBrandContext } from '@/lib/brand-context'
 import { checkGenerationLimit } from '@/lib/rate-limit'
 import { logger } from '@/lib/log'
+import { moderatePrompt, MODERATION_ERROR_BODY } from '@/lib/moderation'
 
 const BASE_URL = 'https://api.minimax.io'
 const API_KEY = process.env.MINIMAX_API_KEY
@@ -92,6 +93,12 @@ export async function POST(request: NextRequest) {
     const limit = checkGenerationLimit(user.id)
     if (!limit.ok) {
       return NextResponse.json(limit.body, { status: limit.status, headers: limit.headers })
+    }
+
+    const moderation = moderatePrompt(prompt)
+    if (!moderation.ok) {
+      logger.warn('video prompt blocked', { userId: user.id, category: moderation.category })
+      return NextResponse.json(MODERATION_ERROR_BODY(moderation), { status: 400 })
     }
 
     // Deduct credits before creating task

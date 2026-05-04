@@ -6,6 +6,7 @@ import { saveGeneration } from "@/lib/save-generation"
 import { buildVisualBrandContext, type FullBrandContext } from "@/lib/brand-context"
 import { checkGenerationLimit } from "@/lib/rate-limit"
 import { logger } from "@/lib/log"
+import { moderatePrompt, MODERATION_ERROR_BODY } from "@/lib/moderation"
 
 const replicate = new Replicate({
   auth: process.env.REPLICATE_API_TOKEN,
@@ -31,6 +32,12 @@ export async function POST(req: NextRequest) {
     const limit = checkGenerationLimit(user.id)
     if (!limit.ok) {
       return NextResponse.json(limit.body, { status: limit.status, headers: limit.headers })
+    }
+
+    const moderation = moderatePrompt(prompt)
+    if (!moderation.ok) {
+      logger.warn("image prompt blocked", { userId: user.id, category: moderation.category })
+      return NextResponse.json(MODERATION_ERROR_BODY(moderation), { status: 400 })
     }
 
     // Deduct credits before generating

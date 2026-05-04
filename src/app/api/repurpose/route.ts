@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server'
 import Anthropic from '@anthropic-ai/sdk'
 import { createClient } from '@/lib/supabase/server'
 import { deductCredits, CREDIT_COSTS } from '@/lib/credits'
+import { moderatePrompt, MODERATION_ERROR_BODY } from '@/lib/moderation'
+import { logger } from '@/lib/log'
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -117,6 +119,12 @@ export async function POST(request: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    const moderation = moderatePrompt(sourceContent)
+    if (!moderation.ok) {
+      logger.warn('repurpose source blocked', { userId: user.id, category: moderation.category })
+      return NextResponse.json(MODERATION_ERROR_BODY(moderation), { status: 400 })
     }
 
     // Deduct credits

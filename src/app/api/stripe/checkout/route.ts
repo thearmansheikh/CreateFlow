@@ -10,8 +10,7 @@ const CREDIT_PRICES: Record<number, number> = {
   1500: 5000,  // $50.00
 }
 
-// Live Stripe Price ID for CreateFlow Pro ($4.99/mo)
-const PRO_PRICE_ID = 'price_1TPndxCKueHdv9l628CruqMT'
+const PRO_PRICE_ID = process.env.STRIPE_PRO_PRICE_ID
 
 export async function POST(request: NextRequest) {
   try {
@@ -66,7 +65,7 @@ export async function POST(request: NextRequest) {
 
     // Subscription purchase (uses Price ID from env)
     if (type === 'subscription') {
-      if (!PRO_PRICE_ID || PRO_PRICE_ID.includes('YOUR_')) {
+      if (!PRO_PRICE_ID) {
         return NextResponse.json(
           { error: 'Stripe Pro plan not configured. Set STRIPE_PRO_PRICE_ID in env vars.' },
           { status: 500 }

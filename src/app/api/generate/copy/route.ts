@@ -6,6 +6,7 @@ import { saveGeneration } from '@/lib/save-generation'
 import { buildVoiceBrandContext, type FullBrandContext } from '@/lib/brand-context'
 import { checkGenerationLimit } from '@/lib/rate-limit'
 import { logger } from '@/lib/log'
+import { moderatePrompt, MODERATION_ERROR_BODY } from '@/lib/moderation'
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
@@ -38,6 +39,12 @@ export async function POST(request: NextRequest) {
     const limit = checkGenerationLimit(user.id)
     if (!limit.ok) {
       return NextResponse.json(limit.body, { status: limit.status, headers: limit.headers })
+    }
+
+    const moderation = moderatePrompt(prompt)
+    if (!moderation.ok) {
+      logger.warn('copy prompt blocked', { userId: user.id, category: moderation.category })
+      return NextResponse.json(MODERATION_ERROR_BODY(moderation), { status: 400 })
     }
 
     // Deduct credits
