@@ -208,7 +208,7 @@ export async function POST(request: NextRequest) {
           status: sub.status,
           currentPeriodStart: (sub as unknown as { current_period_start: number }).current_period_start,
           currentPeriodEnd: (sub as unknown as { current_period_end: number }).current_period_end,
-          cancelAtPeriodEnd: sub.cancel_at_period_end,
+          cancelAtPeriodEnd: isCancelScheduled(sub),
         })
         // If past_due / unpaid, keep them on pro until canceled; downgrade only on terminal states.
         if (sub.status === 'canceled' || sub.status === 'incomplete_expired') {
@@ -228,7 +228,7 @@ export async function POST(request: NextRequest) {
           status: 'canceled',
           currentPeriodStart: (sub as unknown as { current_period_start: number }).current_period_start,
           currentPeriodEnd: (sub as unknown as { current_period_end: number }).current_period_end,
-          cancelAtPeriodEnd: sub.cancel_at_period_end,
+          cancelAtPeriodEnd: isCancelScheduled(sub),
         })
         await setSubscriptionTier(userId, 'free')
       }
