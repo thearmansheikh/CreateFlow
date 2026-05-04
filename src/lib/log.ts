@@ -1,10 +1,12 @@
 // Tiny structured logger.
 // - logger.debug: dev-only verbose; silenced in production unless DEBUG=1.
 // - logger.info: always shown, but should be used sparingly in API routes.
-// - logger.error: always shown. Forwarded to Sentry once SENTRY_DSN is configured.
+// - logger.error: always shown. Forwarded to Sentry when SENTRY_DSN is set.
+import * as Sentry from '@sentry/nextjs'
 
 const isProd = process.env.NODE_ENV === 'production'
 const debugEnabled = process.env.DEBUG === '1' || !isProd
+const sentryEnabled = Boolean(process.env.SENTRY_DSN)
 
 interface LogFields {
   [key: string]: unknown
@@ -44,6 +46,13 @@ export const logger = {
     }
     // eslint-disable-next-line no-console
     console.error(format('error', msg, merged))
-    // TODO: forward to Sentry once SENTRY_DSN is wired up.
+
+    if (sentryEnabled) {
+      if (err instanceof Error) {
+        Sentry.captureException(err, { extra: { msg, ...fields } })
+      } else {
+        Sentry.captureMessage(msg, { level: 'error', extra: { ...fields, err } })
+      }
+    }
   },
 }
