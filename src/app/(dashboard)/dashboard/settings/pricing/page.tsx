@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils"
 const plans = [
   {
     name: "Free",
-    price: "$0",
+    price: "£0",
     period: "",
     credits: 50,
     gradient: "from-slate-500 to-gray-500",
@@ -27,7 +27,7 @@ const plans = [
   },
   {
     name: "Pro",
-    price: "$4.99",
+    price: "£4.99",
     period: "/month",
     credits: 500,
     gradient: "from-violet-500 to-purple-500",
@@ -101,7 +101,7 @@ export default function PricingPage() {
       <div className="text-center">
         <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Choose your plan</h1>
         <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">
-          Start free with 50 credits. Upgrade to Pro for $4.99/mo when you need more.
+          Start free with 50 credits. Upgrade to Pro for £4.99/mo when you need more.
         </p>
       </div>
 

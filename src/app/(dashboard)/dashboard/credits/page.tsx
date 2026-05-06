@@ -188,8 +188,8 @@ export default function CreditsPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="text-center space-y-2">
-                <div className="text-4xl font-bold">${pack.price}</div>
-                <p className="text-sm text-muted-foreground">${costPerCredit(pack)}¢ per credit</p>
+                <div className="text-4xl font-bold">£{pack.price}</div>
+                <p className="text-sm text-muted-foreground">{costPerCredit(pack)}p per credit</p>
                 <p className="text-xs text-muted-foreground">
                   {pack.credits} generations × 1 credit
                 </p>

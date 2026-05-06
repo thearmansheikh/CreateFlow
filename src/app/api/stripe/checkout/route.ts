@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
         line_items: [
           {
             price_data: {
-              currency: 'usd',
+              currency: 'gbp',
               product_data: {
                 name: `${creditAmount.toLocaleString()} Credits`,
                 description: 'CreateFlow credits for AI content generation',

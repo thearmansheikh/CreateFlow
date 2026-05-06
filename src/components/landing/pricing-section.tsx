@@ -9,7 +9,7 @@ const plans = [
   {
     name: "Free",
     icon: Sparkles,
-    price: "$0",
+    price: "£0",
     description: "50 credits \u2014 perfect for trying out CreateFlow",
     features: [
       "50 credits on signup",
@@ -25,7 +25,7 @@ const plans = [
   {
     name: "Pro",
     icon: Zap,
-    price: "$4.99",
+    price: "£4.99",
     period: "/month",
     description: "For serious content creators",
     features: [
@@ -37,7 +37,7 @@ const plans = [
       "Repurpose engine",
       "Priority support",
     ],
-    cta: "Start for $4.99",
+    cta: "Start for £4.99",
     popular: true,
     launchPrice: true,
   },
@@ -113,7 +113,7 @@ export default function PricingSection() {
             Start free, scale as you grow. No hidden fees, cancel anytime.
           </p>
           <p className="mt-2 text-sm text-muted-foreground">
-            All prices shown in USD.
+            All prices shown in GBP.
           </p>
         </motion.div>
 

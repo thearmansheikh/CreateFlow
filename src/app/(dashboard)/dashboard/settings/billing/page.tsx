@@ -13,7 +13,7 @@ const tiers = [
   {
     name: "Free",
     tierKey: "free" as Tier,
-    price: "$0",
+    price: "£0",
     credits: 50,
     description: "Try CreateFlow with 50 free credits",
     features: [
@@ -29,7 +29,7 @@ const tiers = [
   {
     name: "Pro",
     tierKey: "pro" as Tier,
-    price: "$4.99",
+    price: "£4.99",
     credits: 500,
     description: "For solo content creators",
     features: [
@@ -150,7 +150,7 @@ export default function BillingPage() {
                 <CardDescription>{tier.description}</CardDescription>
                 <div>
                   <span className="text-3xl font-bold">{tier.price}</span>
-                  {tier.price !== "$0" && tier.price !== "Custom" && (
+                  {tier.price !== "£0" && tier.price !== "Custom" && (
                     <span className="text-sm text-muted-foreground">/month</span>
                   )}
                 </div>

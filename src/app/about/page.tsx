@@ -60,7 +60,7 @@ export default function AboutPage() {
           <section>
             <h2 className="text-xl font-semibold text-white mb-3">Pricing philosophy</h2>
             <p>
-              Free plan exists for real use, not just a trial. Pro is a flat $4.99/month
+              Free plan exists for real use, not just a trial. Pro is a flat £4.99/month
               with everything unlocked. We don't sell your data and we don't pad the
               price with feature tiers.
             </p>
